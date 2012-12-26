@@ -10,6 +10,7 @@ do
  print(k,val) 
 end
 
+--##################
 
 tableB = {name="jack",age="10",mark="100"}
 
@@ -20,8 +21,20 @@ do
  print(k,val) 
 end
 
+--##################
 
 tableC = {["name"]="terry",["age"]=10,["mark"]=90}
 
 for k ,val in pairs(tableC) do print(k,val) end
+
+
+
+--##################
+
+print "enter a number : "
+
+n = assert(io.read("*number"),"invalid input")
+
+
+
 
