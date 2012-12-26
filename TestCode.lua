@@ -13,7 +13,12 @@ end
 
 tableB = {name="jack",age="10",mark="100"}
 
-for k,val in pairs(tableB) do print(k,val) end
+print(tableB["name"])
+
+for k,val in pairs(tableB) 
+do 
+ print(k,val) 
+end
 
 
 tableC = {["name"]="terry",["age"]=10,["mark"]=90}
