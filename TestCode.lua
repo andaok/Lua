@@ -79,6 +79,34 @@ for i=1,10000000 do s = s + i end
 
 print(string.format("elapsed time : %.2f\n",os.clock()-x))
 
+--##################
+
+-- vid = userid(4) + videoid(3)
+-- pid = pid(4)
+-- [a-zA-Z0-9]
+
+vid = "Fay7JL5"
+pid = "GfK6"
+
+key1 = vid.."_"..pid.."_".."0"
+key2 = vid.."_"..pid.."_".."X"
+key3 = vid.."_"..pid.."_".."Y"
+key4 = vid.."_"..pid.."_".."X0"
+key5 = vid.."_"..pid.."_".."1"
+key6 = vid.."_"..pid.."_".."P"
+key7 = vid.."_"..pid.."_".."C"
+key8 = vid.."_"..pid.."_".."L1"
+key9 = vid.."_"..pid.."_".."X1"
+
+keys = {key1,key2,key3,key4,key5,key6,key7,key8,key9}
+
+
+a,b,c,d,e = string.find(key1,"(.*)_(.*)_(.*)")
+
+print(key1)
+print(a,b,c,d,e)
+
+
 
 
 
