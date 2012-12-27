@@ -88,7 +88,7 @@ print(string.format("elapsed time : %.2f\n",os.clock()-x))
 vid = "Fay7JL5"
 pid = "GfK6"
 
-key1 = vid.."_"..pid.."_".."098"
+key1 = vid.."_"..pid.."_".."0"
 key2 = vid.."_"..pid.."_".."X"
 key3 = vid.."_"..pid.."_".."Y"
 key4 = vid.."_"..pid.."_".."X0"
@@ -106,10 +106,25 @@ a,b,c,d,e = string.find(key1,"(.*)_(.*)_(.*)")
 print(key1)
 print(a,b,c,d,e)
 
-if (string.len(c) == 7 and string.len(d) == 4) and string.len(e) <= 2  then 
+if (string.len(c) == 7 and string.len(d) == 4) and (string.len(e) == 1 or string.len(e) == 2) then 
   UserId = string.sub(c,1,4)
   FileId = string.sub(c,5,-1)
-  print(UserId,FileId) 
+  print(UserId,FileId)
+
+  Pid , Flag = d , e
+  print(Pid,Flag)
+
+  if e == "0" then
+     print(e,": is suc play start")
+  elseif e == "X" then
+     print(e,": is load player fail")
+  elseif e == "Y" then
+     print(e,": is start check flow")
+  elseif e == "X0" then
+     print(e,": is play video fail")
+  elseif e == "P" then
+     print(e,": is log playtime info")
+  end
 
 else
   print(key,"not is vid")
