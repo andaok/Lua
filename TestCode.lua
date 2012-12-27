@@ -106,6 +106,14 @@ a,b,c,d,e = string.find(key1,"(.*)_(.*)_(.*)")
 print(key1)
 print(a,b,c,d,e)
 
+if string.len(c) == 7  then 
+  UserId = string.sub(c,1,4)
+  FileId = string.sub(c,5,-1)
+  print(UserId,FileId) 
+else
+  print(c,"not is vid")
+end 
+
 
 
 
