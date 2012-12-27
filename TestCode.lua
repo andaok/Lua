@@ -70,3 +70,15 @@ for i,n in ipairs(a)
 
 --##################
 
+local x = os.clock()
+print("now elapsed time",x)
+
+local s = 0
+
+for i=1,10000000 do s = s + i end
+
+print(string.format("elapsed time : %.2f\n",os.clock()-x))
+
+
+
+
