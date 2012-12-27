@@ -88,7 +88,7 @@ print(string.format("elapsed time : %.2f\n",os.clock()-x))
 vid = "Fay7JL5"
 pid = "GfK6"
 
-key1 = vid.."_"..pid.."_".."0"
+key1 = vid.."_"..pid.."_".."098"
 key2 = vid.."_"..pid.."_".."X"
 key3 = vid.."_"..pid.."_".."Y"
 key4 = vid.."_"..pid.."_".."X0"
@@ -106,12 +106,13 @@ a,b,c,d,e = string.find(key1,"(.*)_(.*)_(.*)")
 print(key1)
 print(a,b,c,d,e)
 
-if string.len(c) == 7  then 
+if (string.len(c) == 7 and string.len(d) == 4) and string.len(e) <= 2  then 
   UserId = string.sub(c,1,4)
   FileId = string.sub(c,5,-1)
   print(UserId,FileId) 
+
 else
-  print(c,"not is vid")
+  print(key,"not is vid")
 end 
 
 
