@@ -156,7 +156,26 @@ else
    print(os)
 end 
 
-q,val,xi = string.find(agent2,".*Firefox/([.0-9]+)")
-print(q,val,xi)
+if string.find(agent2,".*Firefox/([.0-9]+)") then
+    print("zxc")
+else
+   print("no find")
+end
+
+
+if string.find(agent3,".*MSIE%s+([.0-9]+)") then
+    _,_,ver = string.find(agent3,".*MSIE%s+([.0-9]+)") 
+   print(ver)
+else
+   print("no find")
+end
+
+
+if string.find(agent1,".*Chrome/([.0-9]+)") then
+    _,_,ver = string.find(agent1,".*Chrome/([.0-9]+)")
+   print(ver)
+else
+   print("no find")
+end
 
 
