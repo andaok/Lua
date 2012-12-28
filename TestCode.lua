@@ -140,4 +140,20 @@ cdn = func()
 
 print(type(cdn))
 
+-- #####################
+
+agent1 = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.65 Safari/535.11"
+agent2 = "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.17) Gecko/20110421 Red Hat/3.6.17-1.el6_0 Firefox/3.6.17"
+agent3 = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; SV1; .NET CLR 1.1.4322)"
+agent4 = "xzczxc"
+
+
+if string.find(agent4,"Windows NT 5.2") then
+   os = "windows server 2003"
+   print(os)
+else
+   os = "unkown"
+   print(os)
+end 
+
 
