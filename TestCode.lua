@@ -130,7 +130,14 @@ else
   print(key,"not is vid")
 end 
 
+-- #####################
 
+abc = "{key=1,key2=2}"
+lua = "return " ..abc     
+local func = loadstring(lua) 
+ 
+cdn = func()
 
+print(type(cdn))
 
 
