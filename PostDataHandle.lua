@@ -157,9 +157,9 @@
                      end
                      
                      -- Handle video play window close
-                     function PlayWindowClose(key,value)
+                     function PlayWindowClose(vid,pid,value)
                         -- Handle the playback data
-
+                        local res,err = red:get("")
                         -- Write vid_pid to end list
                      end
 
@@ -260,7 +260,7 @@
 
                              -- Video play window close
                              if flag == "C" then
-                                PlayWindowClose(args["key"],tablevalue)
+                                PlayWindowClose(vid,pid,tablevalue)
                              end
 
                              -- Video pause,drag and end 
