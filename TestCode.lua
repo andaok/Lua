@@ -180,13 +180,26 @@ end
 
 -- ###########################
 
-str = "19xzc"
+str = "1"
 num = tonumber(str)
 
-print(num)
 
 --[[
 if tonumber(str) >= 1 then
    print("suc")
 end
 --]]
+
+if tonumber(str) and tonumber(str) >= 1 then
+   print("suc")
+end 
+
+-- ###########################
+flag = "L8"
+
+if string.sub(flag,1,1) == "L" then
+   print("yes")
+end
+
+
+

@@ -148,6 +148,28 @@
                         end
                      end
 
+                     -- Handle receive play information every 10 seconds
+                     function RecPlayInfo(key,value)
+                        jsonvalue = json.encode(value)
+
+                        local ok,err = red:set(key,jsonvalue)
+                        if not ok then
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fail set to redis , Error info "..err)
+                           return
+                        end
+                     end
+
+                     -- Handle video pause,drag,end
+                     function VPauseDragEnd(key,value)
+                        jsonvalue = json.encode(value)
+
+                        local ok,err = red:set(key,jsonvalue)
+                        if not ok then
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fail set to redis , Error info "..err)
+                           return
+                        end
+                     end                     
+
                      -- Main                     
 
                      ngx.req.read_body()
@@ -193,7 +215,16 @@
                              if flag == "0" then
                                 PlayVideoSuc(args["key"],tablevalue)
                              end
-                           
+                          
+                             -- Receive play information every 10 seconds
+                             if flag == "P" then
+                                RecPlayInfo(args["key"],tablevalue)
+                             end
+
+                             -- Video pause,drag and end 
+                             if tonumber(flag) and tonumber(flag) >= 1 then
+                                VPauseDragEnd(args["key"],tablevalue)
+                             end
 
                           else
                              succ, err, forcible = log_dict:set(os.date("%x/%X"),args["key"].." data format is incorrect")
