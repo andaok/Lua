@@ -110,6 +110,9 @@
                            succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fail set to redis , Error info "..err)
                            return
                         end
+
+                        -- check traffic and return result to client
+
                      end
 
                      -- Main                     
