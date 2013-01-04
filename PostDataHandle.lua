@@ -112,7 +112,22 @@
                         end
 
                         -- check traffic and return result to client
+                        -- 
 
+                     end
+                   
+                     -- Handle play video failure in first play
+                     function SplayVideoFail(key,value)
+                        local time = os.time()
+                    
+                        value["starttime"] = time
+                        jsonvalue = json.encode(value)
+ 
+                        local ok,err = red:set(key,jsonvalue)
+                        if not ok then
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fail set to redis , Error info "..err)
+                           return
+                        end
                      end
 
                      -- Main                     
@@ -149,6 +164,11 @@
                              -- Check user traffic
                              if flag == "Y" then
                                 CheckTraffic(args["key"],tablevalue)
+                             end
+
+                             -- Play video failure in play start
+                             if flag == "X0" then
+                                SplayVideoFail(args["key"],tablevalue)
                              end
                            
                           else
