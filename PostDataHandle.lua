@@ -121,7 +121,7 @@
                      end
                    
                      -- Handle play video failure in first play
-                     function SplayVideoFail(key,value)
+                     function PlayVideoFail(key,value)
                         local time = os.time()
                     
                         value["starttime"] = time
@@ -170,6 +170,28 @@
                         end
                      end                     
 
+                     -- Handle video stream switch
+                     function VStreamSwitch(key,value)
+                        jsonvalue = json.encode(value)
+
+                        local ok,err = red:set(key,jsonvalue)
+                        if not ok then
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fail set to redis , Error info "..err)
+                           return
+                        end
+                     end
+
+                     -- Handle video play error
+                     function VideoPlayError(key,value)
+                        jsonvalue = json.encode(value)
+
+                        local ok,err = red:set(key,jsonvalue)
+                        if not ok then
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fail set to redis , Error info "..err)
+                           return
+                        end
+                     end
+
                      -- Main                     
 
                      ngx.req.read_body()
@@ -208,7 +230,7 @@
 
                              -- Play video failure in play start
                              if flag == "X0" then
-                                SplayVideoFail(args["key"],tablevalue)
+                                PlayVideoFail(args["key"],tablevalue)
                              end
 
                              -- Play video success
@@ -221,11 +243,26 @@
                                 RecPlayInfo(args["key"],tablevalue)
                              end
 
+                             -- Video play window close
+                             if flag == "C" then
+                                PlayWindowClose(args["key"],tablevalue)
+                             end
+
                              -- Video pause,drag and end 
                              if tonumber(flag) and tonumber(flag) >= 1 then
                                 VPauseDragEnd(args["key"],tablevalue)
                              end
 
+                             -- Video stream switch
+                             if string.sub(flag,1,1) == "L" then
+                                VStreamSwitch(args["key"],tablevalue)
+                             end
+
+                             -- Video play error during play
+                             if string.sub(flag,1,1) == "X" and string.len(flag) > 1 then
+                                PlayVideoError(args["key"],tablevalue) 
+                             end
+                 
                           else
                              succ, err, forcible = log_dict:set(os.date("%x/%X"),args["key"].." data format is incorrect")
                              return
