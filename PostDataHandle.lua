@@ -2,13 +2,21 @@
                      local log_dict = ngx.shared.log_dict
                      local redis = require "resty.redis"
                      local json = require "json"
-                     local red = redis:new()
-             
-                     red:set_timeout(1000)
 
+                     local red = redis:new()
+                     red:set_timeout(1000)
                      local ok,err = red:connect("127.0.0.1",6379)
                      if not ok then
-                        succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fail connect to redis , Error info "..err)
+                        succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fail connect to local redis , Error info "..err)
+                        return
+                     end
+
+                     -- Every player data,pending list and end list store in "redata" redis server
+                     local redata = redis:new()
+                     redata:set_timeout(1000)
+                     local ok,err = redata:connect("127.0.0.1",6379)
+                     if not ok then
+                        succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fail connect to remote redis , Error info "..err)
                         return
                      end
  
@@ -146,6 +154,13 @@
                            succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fail set to redis , Error info "..err)
                            return
                         end
+                     end
+                     
+                     -- Handle video play window close
+                     function PlayWindowClose(key,value)
+                        -- Handle the playback data
+
+                        -- Write vid_pid to end list
                      end
 
                      -- Handle receive play information every 10 seconds
