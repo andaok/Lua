@@ -134,6 +134,20 @@
                         end
                      end
 
+                     -- Handle play video success
+                     function PlayVideoSuc(key,value)
+                        local time = os.time()
+
+                        value["starttime"] = time
+                        jsonvalue = json.encode(value)
+
+                        local ok,err = red:set(key,jsonvalue)
+                        if not ok then
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fail set to redis , Error info "..err)
+                           return
+                        end
+                     end
+
                      -- Main                     
 
                      ngx.req.read_body()
@@ -174,7 +188,13 @@
                              if flag == "X0" then
                                 SplayVideoFail(args["key"],tablevalue)
                              end
+
+                             -- Play video success
+                             if flag == "0" then
+                                PlayVideoSuc(args["key"],tablevalue)
+                             end
                            
+
                           else
                              succ, err, forcible = log_dict:set(os.date("%x/%X"),args["key"].." data format is incorrect")
                              return
