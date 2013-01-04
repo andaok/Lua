@@ -150,7 +150,7 @@ agent4 = "xzczxc"
 
 if string.find(agent4,"Windows NT 5.2") then
    os = "windows server 2003"
-   print(os)
+   int(os)
 else
    os = "unkown"
    print(os)
@@ -178,4 +178,15 @@ else
    print("no find")
 end
 
+-- ###########################
 
+str = "19xzc"
+num = tonumber(str)
+
+print(num)
+
+--[[
+if tonumber(str) >= 1 then
+   print("suc")
+end
+--]]
