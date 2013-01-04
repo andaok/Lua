@@ -91,6 +91,27 @@
                         end
                      end
 
+                     -- Handle check user traffic
+                     function CheckTraffic(key,value)
+                        local remoteip = ngx.var.remote_addr
+                        local useragent = ngx.var.http_user_agent
+                        local time = os.time()
+                        local os,browser = ParseOSandBrowser(useragent)
+
+                        value["os"] = os
+                        value["browser"] = browser
+                        value["ip"] = remoteip
+                        value["loadtime"] = time
+
+                        jsonvalue = json.encode(value)
+
+                        local ok,err = red:set(key,jsonvalue)
+                        if not ok then
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fail set to redis , Error info "..err)
+                           return
+                        end
+                     end
+
                      -- Main                     
 
                      ngx.req.read_body()
@@ -116,12 +137,16 @@
                              local func = loadstring(lua)
                              tablevalue = func()       
   
-                             -- Do different according to the different flags
-                             
+                             -- Do different according to the different flags 
                              -- Load player failure
                              if flag == "X" then
                                 PlayerLoadFail(args["key"],tablevalue)
-                             end  
+                             end
+                             
+                             -- Check user traffic
+                             if flag == "Y" then
+                                CheckTraffic(args["key"],tablevalue)
+                             end
                            
                           else
                              succ, err, forcible = log_dict:set(os.date("%x/%X"),args["key"].." data format is incorrect")
