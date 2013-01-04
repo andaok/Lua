@@ -91,8 +91,8 @@
                         end
                      end
 
-                     -- Handle check user traffic
-                     function CheckTraffic(key,value)
+                     -- Handle check user remaining flow
+                     function CheckFlow(key,value)
                         local remoteip = ngx.var.remote_addr
                         local useragent = ngx.var.http_user_agent
                         local time = os.time()
@@ -103,6 +103,10 @@
                         value["ip"] = remoteip
                         value["loadtime"] = time
 
+                        -- Record client area information
+                        value["country"] = ngx.var.geoip_city_country_name
+                        value["city"] = ngx.var.geoip_city
+                        
                         jsonvalue = json.encode(value)
 
                         local ok,err = red:set(key,jsonvalue)
@@ -111,9 +115,9 @@
                            return
                         end
 
-                        -- check traffic and return result to client
-                        -- 
-
+                        -- Check flow and return result to client
+                        -- If the flow surplus,write vid_pid to pending list
+                         
                      end
                    
                      -- Handle play video failure in first play
@@ -161,9 +165,9 @@
                                 PlayerLoadFail(args["key"],tablevalue)
                              end
                              
-                             -- Check user traffic
+                             -- Check user flow
                              if flag == "Y" then
-                                CheckTraffic(args["key"],tablevalue)
+                                CheckFlow(args["key"],tablevalue)
                              end
 
                              -- Play video failure in play start
