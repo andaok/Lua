@@ -161,7 +161,10 @@
                      function PlayWindowClose(vid,pid,value)
                         -- Handle the playback data
                         local res,err = red:get(vid.."_"..pid.."_".."Y")
-                        ngx.print("cjson is : ",cjson.encode(res))
+                        ngx.print("cjson is : ",res)
+                        t1 = cjson.decode(res)
+                        n = htgetn(t1)
+                        ngx.print("table num : ",n)
                         
                         -- Write vid_pid to end list
                      end
