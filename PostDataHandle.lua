@@ -114,6 +114,7 @@
 
                         -- Record client area information
                         value["country"] = ngx.var.geoip_city_country_name
+                        value["region"] = ngx.var.geoip_region
                         value["city"] = ngx.var.geoip_city
                         
                         jsonvalue = cjson.encode(value)
@@ -160,12 +161,37 @@
                      -- Handle video play window close
                      function PlayWindowClose(vid,pid,value)
                         -- Handle the playback data
+                        --
+                        -- Obtain "loadtime,ip,os,browser,country,region,city" from "vid_pid_Y"
+                        -- Obtain "starttime" from "vid_pid_0"
+                        red:init_pipeline()
+                        red:get(vid.."_"..pid.."_".."Y")
+                        red:get(vid.."_"..pid.."_".."0")
+                        local results,err = red:commit_pipeline()
+                        if not results then
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun -- PlayWindowClose -- Fail get from redis , Error info "..err)
+                           return
+                        end                        
+                        ngx.print("results is : ",cjson.encode(results))
+                         
+                        for i,res in ipairs(cjson.decode(results)) do
+                            ngx.print(i,cjson.encode(res))
+                        end
+                        
+
+                        --[[
                         local res,err = red:get(vid.."_"..pid.."_".."Y")
+                        if not res then
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun -- PlayWindowClose --Fail get vid_pid_Y from redis , Error info "..err)
+                           return
+                        end                        
+                        
                         ngx.print("cjson is : ",res)
                         t1 = cjson.decode(res)
                         n = htgetn(t1)
                         ngx.print("table num : ",n)
-                        
+                        --]]                        
+
                         -- Write vid_pid to end list
                      end
 
