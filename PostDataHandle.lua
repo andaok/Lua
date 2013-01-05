@@ -199,7 +199,7 @@
                             end 
                         end
 
-                        ngx.print("key list : ",cjson.encode(KeyNameList))
+                       -- ngx.print("key list : ",cjson.encode(KeyNameList))
                         
                         red:init_pipeline()
                         for i,key in ipairs(KeyNameList) do
@@ -210,7 +210,10 @@
                            succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun -- PlayWindowClose -- 3 -- Fail get from redis pipeline , Error info "..err)
                            return
                         end
-                                                
+                        
+                        for key,value in ipairs(results) do
+                            ngx.say(key,value)
+                        end                         
 
                         --[[
                         -- Write "vid_pid_S" to redata server
