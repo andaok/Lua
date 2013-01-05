@@ -164,6 +164,7 @@
                         end
                      end
                      
+                     -- #########################
                      -- Handle video play window close
                      function PlayWindowClose(vid,pid,value)
                         -- Handle the playback data
@@ -181,13 +182,19 @@
                         
                         local S = cjson.decode(results[1])
                         S["starttime"] = cjson.decode(results[2])["starttime"]
+
+                        -- Obtain play interval list
+                        --
+
+                        
+
+                        -- Write "vid_pid_S" to redata server
                         local ok ,err = redata:set(vid.."_"..pid.."_".."S",cjson.encode(S))
                         if not ok then
                             succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun -- PlayWindowClose -- 2 -- Fail set to redis , Error info "..err)
                             return
                         end
                         
-
                         --[[
                         local res,err = red:get(vid.."_"..pid.."_".."Y")
                         if not res then
@@ -203,6 +210,7 @@
 
                         -- Write vid_pid to end list
                      end
+                     -- ###########################
 
                      -- Handle receive play information every 10 seconds
                      function RecPlayInfo(key,value)
