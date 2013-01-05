@@ -185,13 +185,33 @@
 
                         -- Obtain play interval list
                         -- 
-                        local res,err = red:keys(vid.."_"..pid.."_".."*")
+                        local res,err = red:keys(vid.."_"..pid.."_".."?")
                         if not res then
                            succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun -- PlayWindowClose -- 2 -- Fail keys from redis , Error info "..err)
                            return
                         end
-                        ngx.print("playinterlist : " , res[1])
+
+                        KeyNameList = {}
+                        for i,key in ipairs(res) do
+                            local flag = string.sub(key,-1,-1)
+                            if tonumber(flag) then
+                               KeyNameList[tonumber(flag)] = key
+                            end 
+                        end
+
+                        ngx.print("key list : ",cjson.encode(KeyNameList))
                         
+                        red:init_pipeline()
+                        for i,key in ipairs(KeyNameList) do
+                            red:get(key)
+                        end                        
+                        local results,err = red:commit_pipeline()
+                        if not results then
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun -- PlayWindowClose -- 3 -- Fail get from redis pipeline , Error info "..err)
+                           return
+                        end
+                                                
+
                         --[[
                         -- Write "vid_pid_S" to redata server
                         local ok ,err = redata:set(vid.."_"..pid.."_".."S",cjson.encode(S))
