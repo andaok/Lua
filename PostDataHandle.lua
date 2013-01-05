@@ -91,7 +91,7 @@
                         value["ip"] = remoteip
                         value["loadtime"] = time
 
-                        jsonvalue = json.encode(value)
+                        jsonvalue = cjson.encode(value)
                                            
                         local ok,err = red:set(key,jsonvalue)
                         if not ok then
@@ -141,7 +141,7 @@
                         local time = os.time()
                     
                         value["starttime"] = time
-                        jsonvalue = json.encode(value)
+                        jsonvalue = cjson.encode(value)
  
                         local ok,err = red:set(key,jsonvalue)
                         if not ok then
@@ -155,7 +155,7 @@
                         local time = os.time()
 
                         value["starttime"] = time
-                        jsonvalue = json.encode(value)
+                        jsonvalue = cjson.encode(value)
 
                         local ok,err = red:set(key,jsonvalue)
                         if not ok then
@@ -184,17 +184,22 @@
                         S["starttime"] = cjson.decode(results[2])["starttime"]
 
                         -- Obtain play interval list
-                        --
-
+                        -- 
+                        local res,err = red:keys(vid.."_"..pid.."_".."*")
+                        if not res then
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun -- PlayWindowClose -- 2 -- Fail keys from redis , Error info "..err)
+                           return
+                        end
+                        ngx.print("playinterlist : " , res[1])
                         
-
+                        --[[
                         -- Write "vid_pid_S" to redata server
                         local ok ,err = redata:set(vid.."_"..pid.."_".."S",cjson.encode(S))
                         if not ok then
                             succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun -- PlayWindowClose -- 2 -- Fail set to redis , Error info "..err)
                             return
                         end
-                        
+                        --]]
                         --[[
                         local res,err = red:get(vid.."_"..pid.."_".."Y")
                         if not res then
@@ -214,7 +219,7 @@
 
                      -- Handle receive play information every 10 seconds
                      function RecPlayInfo(key,value)
-                        jsonvalue = json.encode(value)
+                        jsonvalue = cjson.encode(value)
 
                         local ok,err = red:set(key,jsonvalue)
                         if not ok then
@@ -225,7 +230,7 @@
 
                      -- Handle video pause,drag,end
                      function VPauseDragEnd(key,value)
-                        jsonvalue = json.encode(value)
+                        jsonvalue = cjson.encode(value)
 
                         local ok,err = red:set(key,jsonvalue)
                         if not ok then
@@ -236,7 +241,7 @@
 
                      -- Handle video stream switch
                      function VStreamSwitch(key,value)
-                        jsonvalue = json.encode(value)
+                        jsonvalue = cjson.encode(value)
 
                         local ok,err = red:set(key,jsonvalue)
                         if not ok then
@@ -247,7 +252,7 @@
 
                      -- Handle video play error
                      function VideoPlayError(key,value)
-                        jsonvalue = json.encode(value)
+                        jsonvalue = cjson.encode(value)
 
                         local ok,err = red:set(key,jsonvalue)
                         if not ok then
