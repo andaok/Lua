@@ -175,13 +175,18 @@
                         red:get(vid.."_"..pid.."_".."0")
                         local results,err = red:commit_pipeline()
                         if not results then
-                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun -- PlayWindowClose -- Fail get from redis , Error info "..err)
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun -- PlayWindowClose -- 1 -- Fail get from redis pipeline , Error info "..err)
                            return
                         end                        
                         
-                        S = cjson.decode(results[1])
+                        local S = cjson.decode(results[1])
                         S["starttime"] = cjson.decode(results[2])["starttime"]
-                        ngx.print("S is : ",cjson.encode(S))
+                        local ok ,err = redata:set(vid.."_"..pid.."_".."S",cjson.encode(S))
+                        if not ok then
+                            succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun -- PlayWindowClose -- 2 -- Fail set to redis , Error info "..err)
+                            return
+                        end
+                        
 
                         --[[
                         local res,err = red:get(vid.."_"..pid.."_".."Y")
