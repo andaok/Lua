@@ -2,6 +2,7 @@
                      local log_dict = ngx.shared.log_dict
                      local redis = require "resty.redis"
                      local json = require "json"
+                     local cjson = require "cjson"
 
                      local red = redis:new()
                      red:set_timeout(1000)
@@ -115,7 +116,7 @@
                         value["country"] = ngx.var.geoip_city_country_name
                         value["city"] = ngx.var.geoip_city
                         
-                        jsonvalue = json.encode(value)
+                        jsonvalue = cjson.encode(value)
 
                         local ok,err = red:set(key,jsonvalue)
                         if not ok then
@@ -159,7 +160,9 @@
                      -- Handle video play window close
                      function PlayWindowClose(vid,pid,value)
                         -- Handle the playback data
-                        local res,err = red:get("")
+                        local res,err = red:get(vid.."_"..pid.."_".."Y")
+                        ngx.print("cjson is : ",cjson.encode(res))
+                        
                         -- Write vid_pid to end list
                      end
 
