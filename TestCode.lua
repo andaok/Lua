@@ -1,3 +1,4 @@
+local cjson = require "cjson"
 
 local i = 1
 print(i)
@@ -201,5 +202,11 @@ if string.sub(flag,1,1) == "L" then
    print("yes")
 end
 
+-- ###########################
+
+
+t1 = {name="terry",age=18}
+
+print("cjson : ",cjson.encode(t1))
 
 
