@@ -213,22 +213,58 @@
                            return
                         end
                         
-                        pauselist = {}
-                        endlist = {}
-                        lidlist = {}
+                        local pauselist = {}
+                        local endnum = 0
+                        local lidlist = {}
+                        local periodlist = {}
+
+                        local dtmplist = {}
+                        
+                        -- The judgment of received data(vid_pid_N) is what action trigger
+                        -- "start" : the expressed start play video
+                        -- "drag"  : the expressed Click progress bar trigger
+                        -- "pause" : the expressed Click pause button trigger
+                        -- "end"   : the expressed video auto play complete
+                        -- "replay": the expressed video start play again 
+
                         for key,value in ipairs(results) do
                             ngx.say(key,value)
                             tvalue = cjson.decode(value)
                             ngx.say(htgetn(tvalue))
-       
-                            --If post data is vid_pid_0 
+                            
+                            --If post key format is vid_pid_0,action is "start" 
                             if htgetn(tvalue) == 3 and tvalue["starttime"] then
                                table.insert(lidlist,{tvalue["playtime"],tvalue["lid"]})
                                --ngx.say(cjson.encode(lidlist))
+                               table.insert(dtmplist,tvalue["playtime"])
+                            end
+                          
+                            --If post key format is vid_pid_N(1-10000),action is "drag"
+                            if htgetn(tvalue) == 2 and tvalue["oldtime"] then
+                               table.insert(dtmplist,tvalue["oldtime"])
+                               table.insert(periodlist,dtmplist)
                                dtmplist = {tvalue["playtime"]}
                             end
                             
+                            --If post key format is vid_pid_N(1-10000),action is "pause"
+                            if htgetn(tvalue) == 2 and tvalue["flag"] == "pause" then
+                               table.insert(pauselist,tvalue["playtime"])
+                            end
+
+                            --If post key format is vid_pid_N(1-10000),action is "end"
+                            if htgetn(tvalue) == 2 and tvalue["flag"] == "end" then
+                               endnum = endnum + 1
+                               table.insert(dtmplist,tvalue["playtime"])
+                               table.insert(periodlist,dtmplist)
+                               dtmplist = {}
+                            end
                             
+                            --If post key format is vid_pid_N(1-10000),action is "replay"
+                            if htgetn(tvalue) == 2 and tvalue["lid"] then
+                               table.insert(lidlist,{tvalue["playtime"],tvalue["lid"]})
+                               table.insert(dtmplist,tvalue["playtime"])
+                            end
+                             
                         end                         
 
                         --[[
