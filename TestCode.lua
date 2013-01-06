@@ -209,4 +209,9 @@ t1 = {name="terry",age=18}
 
 print("cjson : ",cjson.encode(t1))
 
+-- #############################
+
+if not t1["jack"] then
+   print("xiahah")
+end
 

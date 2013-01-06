@@ -217,9 +217,18 @@
                         endlist = {}
                         lidlist = {}
                         for key,value in ipairs(results) do
-                            --ngx.say(key,value)
+                            ngx.say(key,value)
                             tvalue = cjson.decode(value)
                             ngx.say(htgetn(tvalue))
+       
+                            --If post data is vid_pid_0 
+                            if htgetn(tvalue) == 3 and tvalue["starttime"] then
+                               table.insert(lidlist,{tvalue["playtime"],tvalue["lid"]})
+                               --ngx.say(cjson.encode(lidlist))
+                               dtmplist = {tvalue["playtime"]}
+                            end
+                            
+                            
                         end                         
 
                         --[[
