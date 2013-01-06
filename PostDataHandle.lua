@@ -194,17 +194,14 @@
                         end
 
                         KeyNameList = {}
-                        ngx.say(htgetn(res))
                         for i,key in ipairs(res) do
                             local flag = string.sub(key,-1,-1)
                             if tonumber(flag) then
                                KeyNameList[tonumber(flag)] = key
                             end 
                         end
-                        ngx.say(htgetn(KeyNameList))
-
-
-                       -- ngx.print("key list : ",cjson.encode(KeyNameList))
+                        
+                        --ngx.print("key list : ",cjson.encode(KeyNameList))
                         
                         red:init_pipeline()
                         for i,key in pairs(KeyNameList) do
@@ -216,8 +213,13 @@
                            return
                         end
                         
+                        pauselist = {}
+                        endlist = {}
+                        lidlist = {}
                         for key,value in ipairs(results) do
-                            ngx.say(key,value)
+                            --ngx.say(key,value)
+                            tvalue = cjson.decode(value)
+                            ngx.say(htgetn(tvalue))
                         end                         
 
                         --[[
