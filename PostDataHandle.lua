@@ -132,7 +132,7 @@
                         end
 
                         -- Check flow and return result to client
-                        -- If the flow surplus,write vid_pid to pending list
+                        -- Write vid_pid to loadlist
                          
                      end
                    
@@ -162,6 +162,8 @@
                            succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fail set to redis , Error info "..err)
                            return
                         end
+                      
+                        -- Write vid_pid to pendinglist
                      end
                      
                      -- #########################
@@ -192,17 +194,20 @@
                         end
 
                         KeyNameList = {}
+                        ngx.say(htgetn(res))
                         for i,key in ipairs(res) do
                             local flag = string.sub(key,-1,-1)
                             if tonumber(flag) then
                                KeyNameList[tonumber(flag)] = key
                             end 
                         end
+                        ngx.say(htgetn(KeyNameList))
+
 
                        -- ngx.print("key list : ",cjson.encode(KeyNameList))
                         
                         red:init_pipeline()
-                        for i,key in ipairs(KeyNameList) do
+                        for i,key in pairs(KeyNameList) do
                             red:get(key)
                         end                        
                         local results,err = red:commit_pipeline()
@@ -236,7 +241,7 @@
                         ngx.print("table num : ",n)
                         --]]                        
 
-                        -- Write vid_pid to end list
+                        -- If handle success,move vid_pid to endlist from pendinglist
                      end
                      -- ###########################
 
