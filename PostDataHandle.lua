@@ -166,13 +166,12 @@
                         -- Write vid_pid to pendinglist
                      end
                      
-                     -- #########################
+                     -- ######################################################
                      -- Handle video play window close
-                     function PlayWindowClose(vid,pid,value)
-                        -- Handle the playback data
-                        --
+                     function PlayWindowClose(vid,pid,Cvalue)
                         -- Obtain "loadtime,ip,os,browser,country,region,city" from "vid_pid_Y"
                         -- Obtain "starttime" from "vid_pid_0"
+                        --
                         red:init_pipeline()
                         red:get(vid.."_"..pid.."_".."Y")
                         red:get(vid.."_"..pid.."_".."0")
@@ -182,6 +181,7 @@
                            return
                         end                        
                         
+                        -- "S" will be store in redis by keyname "vid_pid_S"
                         local S = cjson.decode(results[1])
                         S["starttime"] = cjson.decode(results[2])["starttime"]
 
@@ -263,10 +263,16 @@
                             if htgetn(tvalue) == 2 and tvalue["lid"] then
                                table.insert(lidlist,{tvalue["playtime"],tvalue["lid"]})
                                table.insert(dtmplist,tvalue["playtime"])
-                            end
-                             
+                            end 
                         end                         
 
+                        --If you are playing or pause,close the playback window
+                        if htgetn(dtmplist) == 1 then
+                           table.insert(dtmplist,Cvalue["playtime"])
+                           table.insert(periodlist,dtmplist)
+                           dtmplist = {}
+                        end
+                        
                         --[[
                         -- Write "vid_pid_S" to redata server
                         local ok ,err = redata:set(vid.."_"..pid.."_".."S",cjson.encode(S))
@@ -290,7 +296,7 @@
 
                         -- If handle success,move vid_pid to endlist from pendinglist
                      end
-                     -- ###########################
+                     -- ############################################################
 
                      -- Handle receive play information every 10 seconds
                      function RecPlayInfo(key,value)
