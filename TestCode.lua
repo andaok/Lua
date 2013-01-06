@@ -215,3 +215,11 @@ if not t1["jack"] then
    print("xiahah")
 end
 
+-- ############################
+
+str = "HHHyuJI_jkhl_10"
+
+a,b,vid,pid,flag = string.find(str,"(.*)_(.*)_(.*)")
+
+print(flag)
+
