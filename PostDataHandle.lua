@@ -181,12 +181,11 @@
                            return
                         end                        
                         
-                        -- "S" will be store in redis by keyname "vid_pid_S"
+                        -- "S" will be store in redis(redata) by keyname "vid_pid_S"
                         local S = cjson.decode(results[1])
                         S["starttime"] = cjson.decode(results[2])["starttime"]
 
-                        -- Obtain play interval list
-                        -- 
+                        -- Obtain all "vid_pid_N" data from redis(red),N=[0-10000]
                         local res,err = red:keys(vid.."_"..pid.."_".."?")
                         if not res then
                            succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun -- PlayWindowClose -- 2 -- Fail keys from redis , Error info "..err)
@@ -213,11 +212,15 @@
                            return
                         end
                         
+                        -- "pauselist" store pause playtime,format is "{10,19,67,......}"
                         local pauselist = {}
+                        -- "endnum" store number of play complete
                         local endnum = 0
+                        -- "lidlist" store video flow switch data,format is {{0,2},{11,3},{21,4},......}
                         local lidlist = {}
+                        -- "periodlist" store play segment data,format is {{0,13},{16,29},......}
                         local periodlist = {}
-
+                        
                         local dtmplist = {}
                         
                         -- The judgment of received data(vid_pid_N) is what action trigger
@@ -230,7 +233,6 @@
                         for key,value in ipairs(results) do
                             ngx.say(key,value)
                             tvalue = cjson.decode(value)
-                            ngx.say(htgetn(tvalue))
                             
                             --If post key format is vid_pid_0,action is "start" 
                             if htgetn(tvalue) == 3 and tvalue["starttime"] then
@@ -272,6 +274,12 @@
                            table.insert(periodlist,dtmplist)
                            dtmplist = {}
                         end
+
+                        ngx.say("periodlist is : ",cjson.encode(periodlist))
+                        ngx.say("lidlist is : ",cjson.encode(lidlist))
+                        ngx.say("pauselist is : ",cjson.encode(pauselist))
+                        ngx.say("endlist is : ",endnum)
+                        
                         
                         --[[
                         -- Write "vid_pid_S" to redata server
