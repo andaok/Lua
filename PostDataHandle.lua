@@ -233,13 +233,12 @@
                         local pauselist = {}
                         -- "endsum" store number of play complete sum
                         local endsum = 0
+
                         -- "periodlist" store play segment data,format is {{0,13},{16,29},......}
                         local periodlist = {}
-
-                        -- For 
                         -- "lidlist" store video flow switch data,format is {{0,2},{11,3},{21,4},......}
                         local lidlist = {}
-                        -- ""
+                        
 
 
                         local dtmplist = {}
