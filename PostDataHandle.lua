@@ -234,6 +234,8 @@
                         local pauselist = {}
                         -- "endsum" store number of play complete sum
                         local endsum = 0
+                        -- "periodnumlist" Stored repeatedly play segment,format is {{StartPlayTime,EndPlayTime,repeatnum},...},e.g {{[0,6,2],[8,12,1],[14,16,2],...}}
+                        local periodnumlist = {}
 
                         -- "periodlist" store play segment data,format is {{PlayTime,OldTime},...},e.g {{0,13},{15,25},...}
                         local periodlist = {}
@@ -365,42 +367,32 @@
                             alltimepoint[i] = 0
                         end 
 
-                        --ngx.say(cjson.encode(alltimepoint))
-
                         for i,v in ipairs(periodlist) do
                             for i=stoeven(tonumber(v[1])),etoeven(tonumber(v[2])),2 do
                                 alltimepoint[i] = alltimepoint[i] + 1
                             end
                         end
 
-                        ngx.say(cjson.encode(alltimepoint))
+                        --ngx.say(cjson.encode(alltimepoint))
                       
-                        local periodnumlist = {}
                         local ptmplist = {0,0,alltimepoint[0]}
-                        --[[
-                        local n = 0
-                        for i=0,etoeven(duration),2 do
-                            if alltimepoint[i] ~= 0 then
-                               ptmplist = {i,i,alltimepoint[i]}
-                               n = i+2
-                               break
-                            end
-                        end   
-                        ngx.say(cjson.encode(ptmplist))
-                        ngx.say("n is : "..n)
-                        --]]                     
 
                         for i=2,etoeven(duration),2 do
-                           -- if alltimepoint[i] ~= 0 then
-                               if alltimepoint[i] == alltimepoint[i-2] then
-                                  ptmplist[2] = i
-                               else
-                                  table.insert(periodnumlist,ptmplist)                                 
-                                  ptmplist = {i,i,alltimepoint[i]}
-                               end
-                           -- end        
-                        end                       
+                            if alltimepoint[i] == alltimepoint[i-2] then
+                               ptmplist[2] = i
+                            else
+                               table.insert(periodnumlist,ptmplist)                                 
+                               ptmplist = {i,i,alltimepoint[i]}
+                            end        
+                        end
+                        table.insert(periodnumlist,ptmplist)                        
                         
+                        for i,v in ipairs(periodnumlist) do
+                            if tonumber(v[3]) == 0 then
+                               table.remove(periodnumlist,i)
+                            end
+                        end
+
                         ngx.say(cjson.encode(periodnumlist))
 
                         --#######################
