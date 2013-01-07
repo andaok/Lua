@@ -234,6 +234,8 @@
                         local pauselist = {}
                         -- "endsum" store number of play complete sum
                         local endsum = 0
+                        -- ""
+                        local comprate = 0
                         -- "periodnumlist" Stored repeatedly play segment,format is {{StartPlayTime,EndPlayTime,repeatnum},...},e.g {{[0,6,2],[8,12,1],[14,16,2],...}}
                         local periodnumlist = {}
 
@@ -395,6 +397,16 @@
 
                         ngx.say(cjson.encode(periodnumlist))
 
+                        --#######################
+
+                        --#######################
+                        --Calculate the completion rate
+                        local timesum = 0
+                        for i,v in ipairs(periodnumlist) do
+                            timesum = timesum + (tonumber(v[2])-tonumber(v[1]))
+                        end
+                        comprate =string.sub(timesum/etoeven(duration),1,4)
+                        ngx.say(comprate)
                         --#######################
 
                        

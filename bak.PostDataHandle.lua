@@ -229,10 +229,15 @@
                         end
                         -- ########################
                         
+                        -- ########################
                         -- "pauselist" store pause playtime,format is "{10,19,67,......}"
                         local pauselist = {}
                         -- "endsum" store number of play complete sum
                         local endsum = 0
+                        -- ""
+                        local comprate = 0
+                        -- "periodnumlist" Stored repeatedly play segment,format is {{StartPlayTime,EndPlayTime,repeatnum},...},e.g {{[0,6,2],[8,12,1],[14,16,2],...}}
+                        local periodnumlist = {}
 
                         -- "periodlist" store play segment data,format is {{PlayTime,OldTime},...},e.g {{0,13},{15,25},...}
                         local periodlist = {}
@@ -249,6 +254,7 @@
                         -- "drag"  : the expressed Click progress bar trigger
                         -- "pause" : the expressed Click pause button trigger
                         -- "end"   : the expressed video auto play complete
+                        -- "switch": the expressed flow level switch trigger
 
                         for key,value in ipairs(results) do
                             ngx.say(key,value)
@@ -318,12 +324,92 @@
                            ftmplist = {}
                         end
                         
-
                         ngx.say("periodlist is : ",cjson.encode(periodlist))
                         ngx.say("lidlist is : ",cjson.encode(lidlist))
                         ngx.say("pauselist is : ",cjson.encode(pauselist))
                         ngx.say("endlist is : ",endsum)
+
+                        -- ######################
                         
+                        -- ######################
+                        -- Obtain video meta information from redata , e.g Duration, avg bitrate every flow level.
+                        -- tmp data for debug
+                        flbit = {332,446,722,1782} 
+                        duration = 68                        
+                        -- ######################
+
+                        --#######################
+                        --Flow Statistics
+                        local flowsum = 0  
+                        for i,v in ipairs(lidlist) do
+                            flowsum = flowsum + (tonumber(v[3])-tonumber(v[1]))*tonumber(flbit[tonumber(v[2])])  
+                        end
+
+                        ngx.say(flowsum)
+                        --#######################
+                        
+                        --#######################
+                        --Play Segment Statistics
+                        function stoeven(num)
+                          if num%2 ~= 0 then
+                             num = num - 1
+                          end
+                          return num
+                        end
+                      
+                        function etoeven(num)
+                          if num%2 ~= 0 then 
+                             num = num + 1   
+                          end
+                          return num
+                        end
+
+                        alltimepoint = {}  
+                        for i=0,etoeven(duration),2 do
+                            alltimepoint[i] = 0
+                        end 
+
+                        for i,v in ipairs(periodlist) do
+                            for i=stoeven(tonumber(v[1])),etoeven(tonumber(v[2])),2 do
+                                alltimepoint[i] = alltimepoint[i] + 1
+                            end
+                        end
+
+                        --ngx.say(cjson.encode(alltimepoint))
+                      
+                        local ptmplist = {0,0,alltimepoint[0]}
+
+                        for i=2,etoeven(duration),2 do
+                            if alltimepoint[i] == alltimepoint[i-2] then
+                               ptmplist[2] = i
+                            else
+                               table.insert(periodnumlist,ptmplist)                                 
+                               ptmplist = {i,i,alltimepoint[i]}
+                            end        
+                        end
+                        table.insert(periodnumlist,ptmplist)                        
+                        
+                        for i,v in ipairs(periodnumlist) do
+                            if tonumber(v[3]) == 0 then
+                               table.remove(periodnumlist,i)
+                            end
+                        end
+
+                        ngx.say(cjson.encode(periodnumlist))
+
+                        --#######################
+
+                        --#######################
+                        --Calculate the completion rate
+                        local timesum = 0
+                        for i,v in ipairs(periodnumlist) do
+                            timesum = timesum + (tonumber(v[2])-tonumber(v[1]))
+                        end
+                        comprate =string.sub(timesum/etoeven(duration),1,4)
+                        ngx.say(comprate)
+                        --#######################
+
+                       
                         -- If handle success,move vid_pid to endlist from pendinglist
 
                      end
