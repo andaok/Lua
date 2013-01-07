@@ -186,6 +186,7 @@
                         S["starttime"] = cjson.decode(results[2])["starttime"]
                         
                         -- #######################
+                        KeyNameList = {}
                         -- Obtain all "vid_pid_N" data from redis(red),N=[0-10000]
                         local res,err = red:keys(vid.."_"..pid.."_".."[0-9]*")
                         if not res then
@@ -193,14 +194,27 @@
                            return
                         end
 
-                        KeyNameList = {}
                         for i,key in ipairs(res) do
                             local _,_,_,_,flag = string.find(key,"(.*)_(.*)_(.*)")
                             if tonumber(flag) then
                                KeyNameList[tonumber(flag)] = key
                             end 
                         end
-                        
+
+                        -- Obtain all "vid_pid_LN" data from redis(red),N=[1-10000]
+                        local res,err = red:keys(vid.."_"..pid.."_".."L[0-9]*")
+                        if not res then
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun -- PlayWindowClose -- 3 -- Fail keys from redis , Error info "..err)
+                           return
+                        end
+
+                        for i,key in ipairs(res) do
+                            local _,_,_,_,flag = string.find(key,"(.*)_(.*)_L(.*)")
+                            if tonumber(flag) then
+                               KeyNameList[tonumber(flag)] = key
+                            end
+                        end
+ 
                         --ngx.print("key list : ",cjson.encode(KeyNameList))
                         
                         red:init_pipeline()
@@ -368,7 +382,7 @@
                         
                           a,b,vid,pid,flag = string.find(args["key"],"(.*)_(.*)_(.*)")
 
-                          if (string.len(vid) == 7 and string.len(pid) == 4) and (string.len(flag) == 1 or string.len(flag) == 2) then
+                          if string.len(vid) == 7 and string.len(pid) == 4 then
                                                          
                              UserId = string.sub(vid,1,4)
                              FileId = string.sub(vid,5,-1)
