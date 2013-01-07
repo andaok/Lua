@@ -244,5 +244,5 @@ print(t1[1])
 --print(cjson.encode(t1))
 
 -- #########################
-print(99%2)
+print(0%2)
 

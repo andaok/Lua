@@ -346,12 +346,35 @@
                         
                         --#######################
                         --Play Segment Statistics
-                        if duration%2 ~= 0 then duration = duration + 1 end
+                        function stoeven(num)
+                          if num%2 ~= 0 then
+                             num = num - 1
+                          end
+                          return num
+                        end
+                      
+                        function etoeven(num)
+                          if num%2 ~= 0 then 
+                             num = num + 1   
+                          end
+                          return num
+                        end
+
                         alltimepoint = {}  
-                        for i=0,duration,2 do
-                            alltimepoint[i] = 1
+                        for i=0,etoeven(duration),2 do
+                            alltimepoint[i] = 0
                         end 
+
                         ngx.say(cjson.encode(alltimepoint))
+
+                        for i,v in ipairs(periodlist) do
+                            for i=stoeven(tonumber(v[1])),etoeven(tonumber(v[2])),2 do
+                                alltimepoint[i] = alltimepoint[i] + 1
+                            end
+                        end
+
+                        ngx.say(cjson.encode(alltimepoint))
+                        
                         --#######################
 
                        
