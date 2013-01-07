@@ -240,7 +240,8 @@
                         local lidlist = {}
                         
                         local dtmplist = {}  
-                        local ltmplist = {}
+                        local ftmplist = {}
+                        local flowlevel = 0 
                         
                         
                         -- The judgment of received data(vid_pid_N) is what action trigger
@@ -255,15 +256,18 @@
                             
                             --Post key format is vid_pid_N(0-10000),action is "start" 
                             if tvalue["flag"] == "start" then
-                               
-                               lidlist[screenum] = {}
-                               table.insert(lidlist[screenum],{tvalue["playtime"],tvalue["lid"]})
-                               --ngx.say(cjson.encode(lidlist))
+                               flowlevel = tonumber(tvalue["lid"])
+                               ftmplist = {tvalue["playtime"],tvalue["lid"]} 
+
                                table.insert(dtmplist,tvalue["playtime"])
                             end
                           
                             --Post key format is vid_pid_N(1-10000),action is "drag"
                             if tvalue["oldtime"] then
+                               table.insert(ftmplist,tvalue["oldtime"]) 
+                               table.insert(lidlist,ftmplist)
+                               ftmplist = {tvalue["playtime"],flowlevel}
+                                
                                table.insert(dtmplist,tvalue["oldtime"])
                                table.insert(periodlist,dtmplist)
                                dtmplist = {tvalue["playtime"]}
@@ -271,6 +275,10 @@
                             
                             --If post key format is vid_pid_N(1-10000),action is "pause"
                             if tvalue["flag"] == "pause" then
+                               table.insert(ftmplist,tvalue["playtime"])
+                               table.insert(lidlist,ftmplist)
+                               ftmplist = {tvalue["playtime"],flowlevel}
+                               
                                table.insert(pauselist,tvalue["playtime"])
                             end
 
