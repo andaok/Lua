@@ -231,21 +231,25 @@
                         
                         -- "pauselist" store pause playtime,format is "{10,19,67,......}"
                         local pauselist = {}
-                        -- "endnum" store number of play complete
-                        local endnum = 0
-                        -- "lidlist" store video flow switch data,format is {{0,2},{11,3},{21,4},......}
-                        local lidlist = {}
+                        -- "endsum" store number of play complete sum
+                        local endsum = 0
                         -- "periodlist" store play segment data,format is {{0,13},{16,29},......}
                         local periodlist = {}
-                        
+
+                        -- For 
+                        -- "lidlist" store video flow switch data,format is {{0,2},{11,3},{21,4},......}
+                        local lidlist = {}
+                        -- ""
+
+
                         local dtmplist = {}
+                        local screenum = 0
                         
                         -- The judgment of received data(vid_pid_N) is what action trigger
-                        -- "start" : the expressed start play video
+                        -- "start" : the expressed start(and restart) play video
                         -- "drag"  : the expressed Click progress bar trigger
                         -- "pause" : the expressed Click pause button trigger
                         -- "end"   : the expressed video auto play complete
-                        -- "replay": the expressed video start play again 
 
                         for key,value in ipairs(results) do
                             ngx.say(key,value)
@@ -253,7 +257,9 @@
                             
                             --Post key format is vid_pid_N(0-10000),action is "start" 
                             if tvalue["flag"] == "start" then
-                               table.insert(lidlist,{tvalue["playtime"],tvalue["lid"]})
+                               screenum = screenum + 1
+                               lidlist[screenum] = {}
+                               table.insert(lidlist[screenum],{tvalue["playtime"],tvalue["lid"]})
                                --ngx.say(cjson.encode(lidlist))
                                table.insert(dtmplist,tvalue["playtime"])
                             end
@@ -272,7 +278,7 @@
 
                             --If post key format is vid_pid_N(1-10000),action is "end"
                             if tvalue["flag"] == "end" then
-                               endnum = endnum + 1
+                               endsum = endsum + 1
                                table.insert(dtmplist,tvalue["playtime"])
                                table.insert(periodlist,dtmplist)
                                dtmplist = {}
