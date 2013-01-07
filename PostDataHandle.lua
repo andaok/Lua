@@ -155,6 +155,7 @@
                         local time = os.time()
 
                         value["starttime"] = time
+                        value["flag"] = "start"
                         jsonvalue = cjson.encode(value)
 
                         local ok,err = red:set(key,jsonvalue)
@@ -335,6 +336,11 @@
 
                      -- Handle video pause,drag,end
                      function VPauseDragEnd(key,value)
+
+                        if value["lid"] then
+                           value["flag"] = "start"
+                        end                        
+
                         jsonvalue = cjson.encode(value)
 
                         local ok,err = red:set(key,jsonvalue)
