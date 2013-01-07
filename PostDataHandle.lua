@@ -343,6 +343,17 @@
 
                         ngx.say(flowsum)
                         --#######################
+                        
+                        --#######################
+                        --Play Segment Statistics
+                        if duration%2 ~= 0 then duration = duration + 1 end
+                        alltimepoint = {}  
+                        for i=0,duration,2 do
+                            alltimepoint[i] = 1
+                        end 
+                        ngx.say(cjson.encode(alltimepoint))
+                        --#######################
+
                        
                         -- If handle success,move vid_pid to endlist from pendinglist
 
