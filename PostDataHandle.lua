@@ -335,7 +335,13 @@
                         -- ######################
 
                         --#######################
-                        --
+                        --Flow Statistics
+                        local flowsum = 0  
+                        for i,v in ipairs(lidlist) do
+                            flowsum = flowsum + (tonumber(v[3])-tonumber(v[1]))*tonumber(flbit[tonumber(v[2])])  
+                        end
+
+                        ngx.say(flowsum)
                         --#######################
                        
                         -- If handle success,move vid_pid to endlist from pendinglist
