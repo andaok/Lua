@@ -155,6 +155,7 @@
                         local time = os.time()
 
                         value["starttime"] = time
+                        value["flag"] = "start"
                         jsonvalue = cjson.encode(value)
 
                         local ok,err = red:set(key,jsonvalue)
@@ -186,6 +187,7 @@
                         S["starttime"] = cjson.decode(results[2])["starttime"]
                         
                         -- #######################
+                        KeyNameList = {}
                         -- Obtain all "vid_pid_N" data from redis(red),N=[0-10000]
                         local res,err = red:keys(vid.."_"..pid.."_".."[0-9]*")
                         if not res then
@@ -193,14 +195,27 @@
                            return
                         end
 
-                        KeyNameList = {}
                         for i,key in ipairs(res) do
                             local _,_,_,_,flag = string.find(key,"(.*)_(.*)_(.*)")
                             if tonumber(flag) then
                                KeyNameList[tonumber(flag)] = key
                             end 
                         end
-                        
+
+                        -- Obtain all "vid_pid_LN" data from redis(red),N=[1-10000]
+                        local res,err = red:keys(vid.."_"..pid.."_".."L[0-9]*")
+                        if not res then
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun -- PlayWindowClose -- 3 -- Fail keys from redis , Error info "..err)
+                           return
+                        end
+
+                        for i,key in ipairs(res) do
+                            local _,_,_,_,flag = string.find(key,"(.*)_(.*)_L(.*)")
+                            if tonumber(flag) then
+                               KeyNameList[tonumber(flag)] = key
+                            end
+                        end
+ 
                         --ngx.print("key list : ",cjson.encode(KeyNameList))
                         
                         red:init_pipeline()
@@ -216,58 +231,78 @@
                         
                         -- "pauselist" store pause playtime,format is "{10,19,67,......}"
                         local pauselist = {}
-                        -- "endnum" store number of play complete
-                        local endnum = 0
-                        -- "lidlist" store video flow switch data,format is {{0,2},{11,3},{21,4},......}
-                        local lidlist = {}
-                        -- "periodlist" store play segment data,format is {{0,13},{16,29},......}
+                        -- "endsum" store number of play complete sum
+                        local endsum = 0
+
+                        -- "periodlist" store play segment data,format is {{PlayTime,OldTime},...},e.g {{0,13},{15,25},...}
                         local periodlist = {}
+                        -- "lidlist" store video flow switch data,format is {{StartPlayTime,FlowLevel,EndPlayTime},...},e.g { {0,2,10},{11,3,18},...}
+                        local lidlist = {}
                         
-                        local dtmplist = {}
+                        local dtmplist = {}  
+                        local ftmplist = {}
+                        local flowlevel = 0 
+                        
                         
                         -- The judgment of received data(vid_pid_N) is what action trigger
-                        -- "start" : the expressed start play video
+                        -- "start" : the expressed start(and restart) play video
                         -- "drag"  : the expressed Click progress bar trigger
                         -- "pause" : the expressed Click pause button trigger
                         -- "end"   : the expressed video auto play complete
-                        -- "replay": the expressed video start play again 
 
                         for key,value in ipairs(results) do
                             ngx.say(key,value)
                             tvalue = cjson.decode(value)
                             
-                            --If post key format is vid_pid_0,action is "start" 
-                            if htgetn(tvalue) == 3 and tvalue["starttime"] then
-                               table.insert(lidlist,{tvalue["playtime"],tvalue["lid"]})
-                               --ngx.say(cjson.encode(lidlist))
+                            --Post key format is vid_pid_N(0-10000),action is "start" 
+                            if tvalue["flag"] == "start" then
+                               flowlevel = tonumber(tvalue["lid"])
+                               ftmplist = {tvalue["playtime"],tvalue["lid"]} 
+
                                table.insert(dtmplist,tvalue["playtime"])
                             end
                           
-                            --If post key format is vid_pid_N(1-10000),action is "drag"
-                            if htgetn(tvalue) == 2 and tvalue["oldtime"] then
+                            --Post key format is vid_pid_N(1-10000),action is "drag"
+                            if tvalue["oldtime"] then
+                               table.insert(ftmplist,tvalue["oldtime"]) 
+                               table.insert(lidlist,ftmplist)
+                               ftmplist = {tvalue["playtime"],flowlevel}
+                                
                                table.insert(dtmplist,tvalue["oldtime"])
                                table.insert(periodlist,dtmplist)
                                dtmplist = {tvalue["playtime"]}
                             end
                             
-                            --If post key format is vid_pid_N(1-10000),action is "pause"
-                            if htgetn(tvalue) == 2 and tvalue["flag"] == "pause" then
+                            --Post key format is vid_pid_N(1-10000),action is "pause"
+                            if tvalue["flag"] == "pause" then
+                               table.insert(ftmplist,tvalue["playtime"])
+                               table.insert(lidlist,ftmplist)
+                               ftmplist = {tvalue["playtime"],flowlevel}
+                               
                                table.insert(pauselist,tvalue["playtime"])
                             end
 
+                            --Post key format is vid_pid_LN(1-10000),action is "switch"
+                            if htgetn(tvalue) == 2 and tvalue["lid"] then
+                               flowlevel = tonumber(tvalue["lid"])
+
+                               table.insert(ftmplist,tvalue["playtime"])
+                               table.insert(lidlist,ftmplist)
+                               ftmplist = {tvalue["playtime"],flowlevel}
+                            end 
+
                             --If post key format is vid_pid_N(1-10000),action is "end"
-                            if htgetn(tvalue) == 2 and tvalue["flag"] == "end" then
-                               endnum = endnum + 1
+                            if tvalue["flag"] == "end" then
+                               endsum = endsum + 1
+
+                               table.insert(ftmplist,tvalue["playtime"])
+                               table.insert(lidlist,ftmplist)
+                               ftmplist = {}
+                              
                                table.insert(dtmplist,tvalue["playtime"])
                                table.insert(periodlist,dtmplist)
                                dtmplist = {}
-                            end
-                            
-                            --If post key format is vid_pid_N(1-10000),action is "replay"
-                            if htgetn(tvalue) == 2 and tvalue["lid"] then
-                               table.insert(lidlist,{tvalue["playtime"],tvalue["lid"]})
-                               table.insert(dtmplist,tvalue["playtime"])
-                            end 
+                            end    
                         end                         
 
                         --If you are playing or pause,close the playback window
@@ -276,35 +311,21 @@
                            table.insert(periodlist,dtmplist)
                            dtmplist = {}
                         end
+                        --If you are playing,close the playback window
+                        if htgetn(ftmplist) == 2 then
+                           table.insert(ftmplist,Cvalue["playtime"])
+                           table.insert(lidlist,ftmplist)
+                           ftmplist = {}
+                        end
+                        
 
                         ngx.say("periodlist is : ",cjson.encode(periodlist))
                         ngx.say("lidlist is : ",cjson.encode(lidlist))
                         ngx.say("pauselist is : ",cjson.encode(pauselist))
-                        ngx.say("endlist is : ",endnum)
+                        ngx.say("endlist is : ",endsum)
                         
-                        
-                        --[[
-                        -- Write "vid_pid_S" to redata server
-                        local ok ,err = redata:set(vid.."_"..pid.."_".."S",cjson.encode(S))
-                        if not ok then
-                            succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun -- PlayWindowClose -- 2 -- Fail set to redis , Error info "..err)
-                            return
-                        end
-                        --]]
-                        --[[
-                        local res,err = red:get(vid.."_"..pid.."_".."Y")
-                        if not res then
-                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun -- PlayWindowClose --Fail get vid_pid_Y from redis , Error info "..err)
-                           return
-                        end                        
-                        
-                        ngx.print("cjson is : ",res)
-                        t1 = cjson.decode(res)
-                        n = htgetn(t1)
-                        ngx.print("table num : ",n)
-                        --]]                        
-
                         -- If handle success,move vid_pid to endlist from pendinglist
+
                      end
                      -- ############################################################
 
@@ -321,6 +342,11 @@
 
                      -- Handle video pause,drag,end
                      function VPauseDragEnd(key,value)
+
+                        if value["lid"] then
+                           value["flag"] = "start"
+                        end                        
+
                         jsonvalue = cjson.encode(value)
 
                         local ok,err = red:set(key,jsonvalue)
@@ -368,7 +394,7 @@
                         
                           a,b,vid,pid,flag = string.find(args["key"],"(.*)_(.*)_(.*)")
 
-                          if (string.len(vid) == 7 and string.len(pid) == 4) and (string.len(flag) == 1 or string.len(flag) == 2) then
+                          if string.len(vid) == 7 and string.len(pid) == 4 then
                                                          
                              UserId = string.sub(vid,1,4)
                              FileId = string.sub(vid,5,-1)

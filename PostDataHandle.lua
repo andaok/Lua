@@ -229,6 +229,7 @@
                         end
                         -- ########################
                         
+                        -- ########################
                         -- "pauselist" store pause playtime,format is "{10,19,67,......}"
                         local pauselist = {}
                         -- "endsum" store number of play complete sum
@@ -249,6 +250,7 @@
                         -- "drag"  : the expressed Click progress bar trigger
                         -- "pause" : the expressed Click pause button trigger
                         -- "end"   : the expressed video auto play complete
+                        -- "switch": the expressed flow level switch trigger
 
                         for key,value in ipairs(results) do
                             ngx.say(key,value)
@@ -318,12 +320,24 @@
                            ftmplist = {}
                         end
                         
-
                         ngx.say("periodlist is : ",cjson.encode(periodlist))
                         ngx.say("lidlist is : ",cjson.encode(lidlist))
                         ngx.say("pauselist is : ",cjson.encode(pauselist))
                         ngx.say("endlist is : ",endsum)
+
+                        -- ######################
                         
+                        -- ######################
+                        -- Obtain video meta information from redata , e.g Duration, avg bitrate every flow level.
+                        -- tmp data for debug
+                        flbit = {332,446,722,1782} 
+                        duration = 68                        
+                        -- ######################
+
+                        --#######################
+                        --
+                        --#######################
+                       
                         -- If handle success,move vid_pid to endlist from pendinglist
 
                      end
