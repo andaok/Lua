@@ -251,38 +251,32 @@
                             ngx.say(key,value)
                             tvalue = cjson.decode(value)
                             
-                            --If post key format is vid_pid_0,action is "start" 
-                            if htgetn(tvalue) == 3 and tvalue["starttime"] then
+                            --Post key format is vid_pid_N(0-10000),action is "start" 
+                            if tvalue["flag"] == "start" then
                                table.insert(lidlist,{tvalue["playtime"],tvalue["lid"]})
                                --ngx.say(cjson.encode(lidlist))
                                table.insert(dtmplist,tvalue["playtime"])
                             end
                           
-                            --If post key format is vid_pid_N(1-10000),action is "drag"
-                            if htgetn(tvalue) == 2 and tvalue["oldtime"] then
+                            --Post key format is vid_pid_N(1-10000),action is "drag"
+                            if tvalue["oldtime"] then
                                table.insert(dtmplist,tvalue["oldtime"])
                                table.insert(periodlist,dtmplist)
                                dtmplist = {tvalue["playtime"]}
                             end
                             
                             --If post key format is vid_pid_N(1-10000),action is "pause"
-                            if htgetn(tvalue) == 2 and tvalue["flag"] == "pause" then
+                            if tvalue["flag"] == "pause" then
                                table.insert(pauselist,tvalue["playtime"])
                             end
 
                             --If post key format is vid_pid_N(1-10000),action is "end"
-                            if htgetn(tvalue) == 2 and tvalue["flag"] == "end" then
+                            if tvalue["flag"] == "end" then
                                endnum = endnum + 1
                                table.insert(dtmplist,tvalue["playtime"])
                                table.insert(periodlist,dtmplist)
                                dtmplist = {}
-                            end
-                            
-                            --If post key format is vid_pid_N(1-10000),action is "replay"
-                            if htgetn(tvalue) == 2 and tvalue["lid"] then
-                               table.insert(lidlist,{tvalue["playtime"],tvalue["lid"]})
-                               table.insert(dtmplist,tvalue["playtime"])
-                            end 
+                            end    
                         end                         
 
                         --If you are playing or pause,close the playback window
@@ -297,29 +291,8 @@
                         ngx.say("pauselist is : ",cjson.encode(pauselist))
                         ngx.say("endlist is : ",endnum)
                         
-                        
-                        --[[
-                        -- Write "vid_pid_S" to redata server
-                        local ok ,err = redata:set(vid.."_"..pid.."_".."S",cjson.encode(S))
-                        if not ok then
-                            succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun -- PlayWindowClose -- 2 -- Fail set to redis , Error info "..err)
-                            return
-                        end
-                        --]]
-                        --[[
-                        local res,err = red:get(vid.."_"..pid.."_".."Y")
-                        if not res then
-                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun -- PlayWindowClose --Fail get vid_pid_Y from redis , Error info "..err)
-                           return
-                        end                        
-                        
-                        ngx.print("cjson is : ",res)
-                        t1 = cjson.decode(res)
-                        n = htgetn(t1)
-                        ngx.print("table num : ",n)
-                        --]]                        
-
                         -- If handle success,move vid_pid to endlist from pendinglist
+
                      end
                      -- ############################################################
 
