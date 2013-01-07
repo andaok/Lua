@@ -365,7 +365,7 @@
                             alltimepoint[i] = 0
                         end 
 
-                        ngx.say(cjson.encode(alltimepoint))
+                        --ngx.say(cjson.encode(alltimepoint))
 
                         for i,v in ipairs(periodlist) do
                             for i=stoeven(tonumber(v[1])),etoeven(tonumber(v[2])),2 do
@@ -374,7 +374,28 @@
                         end
 
                         ngx.say(cjson.encode(alltimepoint))
+                      
+                        local periodnumlist = {}
+                        local ptmplist = {0,0,alltimepoint[0]}
+                        for i=2,etoeven(duration),2 do
+                            if alltimepoint[i] == alltimepoint[i-2] then
+                               ptmplist[2] = i
+                            else
+                               table.insert(periodnumlist,ptmplist)
+                               ngx.say(cjson.encode(ptmplist))
+                               ngx.say(cjson.encode(periodnumlist))
+
+                               --ptmplist[1] = i
+                               --ptmplist[2] = i
+                               --ptmplist[3] = alltimepoint[i]
+                                 
+                               ptmplist = {i,i,alltimepoint[i]}
+                               ngx.say(cjson.encode(ptmplist))         
+                            end        
+                        end                       
                         
+                        ngx.say(cjson.encode(periodnumlist))
+
                         --#######################
 
                        
