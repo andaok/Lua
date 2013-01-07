@@ -273,7 +273,7 @@
                                dtmplist = {tvalue["playtime"]}
                             end
                             
-                            --If post key format is vid_pid_N(1-10000),action is "pause"
+                            --Post key format is vid_pid_N(1-10000),action is "pause"
                             if tvalue["flag"] == "pause" then
                                table.insert(ftmplist,tvalue["playtime"])
                                table.insert(lidlist,ftmplist)
@@ -282,9 +282,23 @@
                                table.insert(pauselist,tvalue["playtime"])
                             end
 
+                            --Post key format is vid_pid_LN(1-10000),action is "switch"
+                            if htgetn(tvalue) == 2 and tvalue["lid"] then
+                               flowlevel = tonumber(tvalue["lid"])
+
+                               table.insert(ftmplist,tvalue["playtime"])
+                               table.insert(lidlist,ftmplist)
+                               ftmplist = {tvalue["playtime"],flowlevel}
+                            end 
+
                             --If post key format is vid_pid_N(1-10000),action is "end"
                             if tvalue["flag"] == "end" then
                                endsum = endsum + 1
+
+                               table.insert(ftmplist,tvalue["playtime"])
+                               table.insert(lidlist,ftmplist)
+                               ftmplist = {}
+                              
                                table.insert(dtmplist,tvalue["playtime"])
                                table.insert(periodlist,dtmplist)
                                dtmplist = {}
@@ -297,11 +311,18 @@
                            table.insert(periodlist,dtmplist)
                            dtmplist = {}
                         end
+                        --If you are playing,close the playback window
+                        if htgetn(ftmplist) == 2 then
+                           table.insert(ftmplist,Cvalue["playtime"])
+                           table.insert(lidlist,ftmplist)
+                           ftmplist = {}
+                        end
+                        
 
                         ngx.say("periodlist is : ",cjson.encode(periodlist))
                         ngx.say("lidlist is : ",cjson.encode(lidlist))
                         ngx.say("pauselist is : ",cjson.encode(pauselist))
-                        ngx.say("endlist is : ",endnum)
+                        ngx.say("endlist is : ",endsum)
                         
                         -- If handle success,move vid_pid to endlist from pendinglist
 
