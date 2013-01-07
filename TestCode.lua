@@ -223,3 +223,23 @@ a,b,vid,pid,flag = string.find(str,"(.*)_(.*)_(.*)")
 
 print(flag)
 
+
+-- ###########################
+--
+
+t1 = {}
+
+t1[0] =  "0"
+t1[3] = "3"
+t1[5] = "5"
+t1[2] = "2"
+t1[6] = "6"
+t1[4] = "4"
+
+for k,v in pairs(t1) do
+    print(k,v)
+end
+print(t1[1])
+
+--print(cjson.encode(t1))
+
