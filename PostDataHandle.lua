@@ -234,13 +234,14 @@
                         -- "endsum" store number of play complete sum
                         local endsum = 0
 
-                        -- "periodlist" store play segment data,format is { "1" = {{0,13},{15,25},...},"2" = {{0,15},{17,25},...},...}
+                        -- "periodlist" store play segment data,format is {{PlayTime,OldTime},...},e.g {{0,13},{15,25},...}
                         local periodlist = {}
-                        -- "lidlist" store video flow switch data,format is { "1" = {{0,2},{11,3},{21,4},...},"2" = {{0,1},{13,2},{17,3},...},...}
+                        -- "lidlist" store video flow switch data,format is {{StartPlayTime,FlowLevel,EndPlayTime},...},e.g { {0,2,10},{11,3,18},...}
                         local lidlist = {}
                         
-                        local dtmplist = {}
-                        local screenum = 0
+                        local dtmplist = {}  
+                        local ltmplist = {}
+                        
                         
                         -- The judgment of received data(vid_pid_N) is what action trigger
                         -- "start" : the expressed start(and restart) play video
@@ -254,7 +255,7 @@
                             
                             --Post key format is vid_pid_N(0-10000),action is "start" 
                             if tvalue["flag"] == "start" then
-                               screenum = screenum + 1
+                               
                                lidlist[screenum] = {}
                                table.insert(lidlist[screenum],{tvalue["playtime"],tvalue["lid"]})
                                --ngx.say(cjson.encode(lidlist))
