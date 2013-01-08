@@ -12,7 +12,7 @@
                         return
                      end
 
-                     -- Every player data,pending list and end list store in "redata" redis server
+                     -- Every play data,pendinglist and endlist store in "redata" redis server
                      local redata = redis:new()
                      redata:set_timeout(1000)
                      local ok,err = redata:connect("127.0.0.1",6379)
@@ -113,7 +113,7 @@
                      end
 
                      -- Handle check user remaining flow
-                     function CheckFlow(key,value)
+                     function CheckFlow(jsoncallback,key,value,vid,pid)
                         local remoteip = ngx.var.remote_addr
                         local useragent = ngx.var.http_user_agent
                         local time = os.time()
@@ -139,13 +139,23 @@
 
                         local ok,err = red:set(key,jsonvalue)
                         if not ok then
-                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fail set to redis , Error info "..err)
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun--CheckFlow--Fail set to red,Error info "..err)
+                           return
+                        end
+                        
+                        -- Write vid_pid to loadlist in redata for statistics the video load numbers
+                        local ok,err = redata:rpush("loadlist",vid.."_"..pid)
+                        if not ok then
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun--CheckFlow--Fail rpush to redata,Error info"..err)
                            return
                         end
 
-                        -- Check flow and return result to client
-                        -- Write vid_pid to loadlist
-                         
+                        -- Obtain the video traffic statistics flag from redata,"0" is flow inadequate,"1" is flow surplus.
+                        -- Tmp data,For debug
+                        flowstatflag = {flow=0}
+                        ngx.req.set_header("Content-Type","application/json")
+                        ngx.say(jsoncallback.."("..cjson.encode(flowstatflag)..")")
+                        
                      end
                    
                      -- Handle play video failure in first play
@@ -176,7 +186,12 @@
                            return
                         end
                       
-                        -- Write vid_pid to pendinglist
+                        -- Write vid_pid to pendinglist in redata for prepared to handle's vid_pid
+                        local ok,err = redata:rpush("pendinglist",vid.."_"..pid)
+                        if not ok then
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun--PlayVideoSuc--Fail rpush to redata,Error info"..err)
+                           return
+                        end
                      end
                      
                      -- ######################################################
@@ -478,18 +493,13 @@
 
                      -- Main                     
 
-                     ngx.req.read_body()
-                     local args = ngx.req.get_post_args()
+                     --ngx.req.read_body()
+                     --local args = ngx.req.get_post_args()
 
-                     if htgetn(args) == 2 then
+                     local args = ngx.req.get_uri_args()
 
-                          for name , value in pairs(args) do
-                              if name ~= "key" and name ~= "value" then
-                                 succ, err , forcible = log_dict:set(os.date("%x/%X"),"The post parameter name "..name.." is incorrect")
-                                 return 
-                              end
-                          end
-                        
+                     if htgetn(args) == 4 then
+
                           a,b,vid,pid,flag = string.find(args["key"],"(.*)_(.*)_(.*)")
 
                           if string.len(vid) == 7 and string.len(pid) == 4 then
@@ -509,7 +519,7 @@
                              
                              -- Check user flow
                              if flag == "Y" then
-                                CheckFlow(args["key"],tablevalue)
+                                CheckFlow(args["jsoncallback"],args["key"],tablevalue,vid,pid)
                              end
 
                              -- Play video failure in play start
@@ -553,7 +563,7 @@
                           end                        
                            
                      else
-                          succ, err, forcible = log_dict:set(os.date("%x/%X"),"the number of parameters be 2,but it is "..htgetn(args))
+                          succ, err, forcible = log_dict:set(os.date("%x/%X"),"the number of parameters be 4,but it is "..htgetn(args))
                           return
                      end
 
