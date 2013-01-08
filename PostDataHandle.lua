@@ -31,6 +31,13 @@
                         end
                         return n
                      end
+
+                     -- Check key exists in the redis server
+                     function CheckKey(redisname,keyname)
+                              if redisname == "red" then
+                                 
+                              end
+                     end
                      
                      -- To parse user os and browser information from agent
                      function ParseOSandBrowser(agent)
