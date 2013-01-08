@@ -253,4 +253,11 @@ test = {"0","2","3",
 
 print(test[5])
 
+-- #######################
+
+if not nil then
+   print("true")
+else
+   print("false")
+end
 
