@@ -477,12 +477,15 @@
                         end 
                         --####################### 
                         
-                        -- If handle success,move vid_pid from pendinglist to endlist
+                        --If handle success,move vid_pid from pendinglist to endlist
                         redata:init_pipeline()
-                        redata:
- 
-
-
+                        redata:lrem("pendinglist",1,vid.."_"..pid)
+                        redata:rpush("endlist",vid.."_"..pid)
+                        local results,err = redata:commit_pipeline()
+                        if not results then
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun--PlayWindowClose--6--Fail operate data in redata,Error info "..err)
+                           return
+                        end
 
                      end
                      -- ############################################################
@@ -613,5 +616,16 @@
                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Main--the number of parameters be 4,but it is "..htgetn(args))
                           return
                      end
+
+                     -- put redis connection to conn pool
+                     local ok,err = red:set_keepalive(10,100)
+                     if not ok then
+                        succ, err, forcible = log_dict:set(os.date("%x/%X"),"Main--Fail to set red keepalive,error info : "..err)
+                     end
+                     local ok,err = redata:set_keepalive(10,100)
+                     if not ok then
+                        succ, err, forcible = log_dict:set(os.date("%x/%X"),"Main--Fail to set redata keepalive,error info : "..err)
+                     end
+
 
                                           
