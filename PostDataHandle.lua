@@ -35,7 +35,26 @@
                      -- Check key exists in the redis server
                      function CheckKey(redisname,keyname)
                               if redisname == "red" then
-                                 
+                                 local ok,err = red:exists(keyname)
+                                 if not ok then
+                                    succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun--CheckKey--Fail connect to redis server :"..redisname.." ,Error info "..err)
+                                    return false
+                                 elseif ok == 0 then
+                                    return false
+                                 elseif ok == 1 then
+                                    return true
+                                 end                                
+                              end
+                              if redisname == "redata" then
+                                 local ok,err = redata:exists(keyname)
+                                 if not ok then
+                                    succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun--CheckKey--Fail connect to redis server :"..redisname.." ,Error info "..err)
+                                    return false
+                                 elseif ok == 0 then
+                                    return false
+                                 elseif ok == 1 then
+                                    return true
+                                 end                                
                               end
                      end
                      
@@ -443,8 +462,27 @@
                         ngx.say(comprate)
                         --#######################
 
-                       
-                        -- If handle success,move vid_pid to endlist from pendinglist
+                        --#######################
+                        --Continue Structure S (vid_pid_S)
+                        S["flow"] = flowsum/8 
+                        S["comprate"] = comprate
+                        --Write vid_pid_S and vid_pid_J to redata
+                        redata:init_pipeline()
+                        redata:set(vid.."_"..pid.."_".."S",cjson.encode(S))
+                        redata:set(vid.."_"..pid.."_".."J",cjson.encode(periodnumlist))
+                        local results,err = redata:commit_pipeline()
+                        if not results then
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun--PlayWindowClose--5--Fail set data to redata,Error info "..err)
+                           return
+                        end 
+                        --####################### 
+                        
+                        -- If handle success,move vid_pid from pendinglist to endlist
+                        redata:init_pipeline()
+                        redata:
+ 
+
+
 
                      end
                      -- ############################################################
@@ -546,7 +584,9 @@
 
                              -- Video play window close
                              if flag == "C" then
-                                PlayWindowClose(vid,pid,tablevalue)
+                                if CheckKey("red",vid.."_"..pid.."_".."Y") and CheckKey("red",vid.."_"..pid.."_".."0")  then
+                                   PlayWindowClose(vid,pid,tablevalue)
+                                end
                              end
 
                              -- Video pause,drag and end 
