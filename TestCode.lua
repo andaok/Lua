@@ -239,10 +239,14 @@ t1[4] = "4"
 for k,v in pairs(t1) do
     print(k,v)
 end
-print(t1[1])
+print(t1[02])
 
 --print(cjson.encode(t1))
 
 -- #########################
 print(0%2)
 
+-- ########################
+
+test = {"0","2","3", \
+        "4","5" }

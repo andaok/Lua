@@ -55,6 +55,8 @@
                            os = "openbsd"
                         elseif string.find(agent,"SunOS") then
                            os = "sunos"
+                        elseif string.find(agent,"iPhone") then
+                           os = "iPhone"
                         elseif string.find(agent,"Mac_PowerPC") or string.find(agent,"Macintosh") then
                            os = "macos"
                         else
@@ -71,11 +73,19 @@
                         elseif string.find(agent,".*Chrome/([.0-9]+)") then
                            _,_,ver = string.find(agent,".*Chrome/([.0-9]+)")
                            browser = "chrome "..ver
+                        elseif string.find(agent,".*Safari/([.0-9]+)") then
+                           _,_,ver = string.find(agent,".*Safari/([.0-9]+)")
+                           browser = "Safari "..ver
                         else
                            browser = "Unknown"
                         end
 
                         return os,browser
+                     end
+
+                     -- To parse user region name from region code
+                     function ParseRegionName(regcode)
+                        regname = {}
                      end
 
                      
