@@ -55,6 +55,8 @@
                            os = "openbsd"
                         elseif string.find(agent,"SunOS") then
                            os = "sunos"
+                        elseif string.find(agent,"iPhone") then
+                           os = "iPhone"
                         elseif string.find(agent,"Mac_PowerPC") or string.find(agent,"Macintosh") then
                            os = "macos"
                         else
@@ -71,6 +73,9 @@
                         elseif string.find(agent,".*Chrome/([.0-9]+)") then
                            _,_,ver = string.find(agent,".*Chrome/([.0-9]+)")
                            browser = "chrome "..ver
+                        elseif string.find(agent,".*Safari/([.0-9]+)") then
+                           _,_,ver = string.find(agent,".*Safari/([.0-9]+)")
+                           browser = "Safari "..ver
                         else
                            browser = "Unknown"
                         end
@@ -78,6 +83,13 @@
                         return os,browser
                      end
 
+                     -- To parse user region name from region code
+                     function ParseRegionName(regcode)
+                        regname = {"Anhui","Zhejiang","Jiangxi","Jiangsu","Jilin","Qinghai","Fujian","Heilongjiang","Henan","Hebei",
+                                   "Hunan","Hubei","Xinjiang","Xizang","Gansu","Guangxi","Guizhou","Liaoning","NeiMenGu","Ningxia",
+                                   "Beijing","Shanghai","Shanxi","Shangdong","Shanxi","Tianjin","Yunnan","Guangdong","Hainan","Sichuan","Chongqing"}
+                        return regname[tonumber(regcode)]
+                     end
                      
                      -- Handle player load failure
                      function PlayerLoadFail(key,value)
@@ -115,12 +127,12 @@
                         -- Record client area information
                         if ngx.var.geoip_city_country_name then
                            value["country"] = ngx.var.geoip_city_country_name
-                           value["region"] = ngx.var.geoip_region
+                           value["region"] = ParseRegionName(ngx.var.geoip_region)
                            value["city"] = ngx.var.geoip_city
                         else
-                           value["country"] = "local"
-                           value["region"] = "local"
-                           value["city"] = "local"
+                           value["country"] = "Unknown"
+                           value["region"] = "Unknown"
+                           value["city"] = "Unknown"
                         end
                         
                         jsonvalue = cjson.encode(value)
