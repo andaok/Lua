@@ -107,7 +107,7 @@
                                            
                         local ok,err = red:set(key,jsonvalue)
                         if not ok then
-                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fail set to redis , Error info "..err)
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun--PlayLoadFail--Fail set to redis,Error info "..err)
                            return
                         end
                      end
@@ -167,7 +167,7 @@
  
                         local ok,err = red:set(key,jsonvalue)
                         if not ok then
-                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fail set to redis , Error info "..err)
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun--PlayVideoFail--Fail set to redis,Error info "..err)
                            return
                         end
                      end
@@ -182,7 +182,7 @@
 
                         local ok,err = red:set(key,jsonvalue)
                         if not ok then
-                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fail set to redis , Error info "..err)
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun--PlayVideoSuc--Fail set to redis,Error info "..err)
                            return
                         end
                       
@@ -205,7 +205,7 @@
                         red:get(vid.."_"..pid.."_".."0")
                         local results,err = red:commit_pipeline()
                         if not results then
-                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun -- PlayWindowClose -- 1 -- Fail get from redis pipeline , Error info "..err)
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun--PlayWindowClose--1--Fail get from redis pipeline,Error info "..err)
                            return
                         end                        
                         
@@ -218,7 +218,7 @@
                         -- Obtain all "vid_pid_N" data from redis(red),N=[0-10000]
                         local res,err = red:keys(vid.."_"..pid.."_".."[0-9]*")
                         if not res then
-                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun -- PlayWindowClose -- 2 -- Fail keys from redis , Error info "..err)
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun--PlayWindowClose--2--Fail keys from redis,Error info "..err)
                            return
                         end
 
@@ -232,7 +232,7 @@
                         -- Obtain all "vid_pid_LN" data from redis(red),N=[1-10000]
                         local res,err = red:keys(vid.."_"..pid.."_".."L[0-9]*")
                         if not res then
-                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun -- PlayWindowClose -- 3 -- Fail keys from redis , Error info "..err)
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun--PlayWindowClose--3--Fail keys from redis,Error info "..err)
                            return
                         end
 
@@ -251,7 +251,7 @@
                         end                        
                         local results,err = red:commit_pipeline()
                         if not results then
-                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun -- PlayWindowClose -- 3 -- Fail get from redis pipeline , Error info "..err)
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun--PlayWindowClose--4--Fail get from redis pipeline,Error info "..err)
                            return
                         end
                         -- ########################
@@ -448,7 +448,7 @@
 
                         local ok,err = red:set(key,jsonvalue)
                         if not ok then
-                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fail set to redis , Error info "..err)
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun--RecPlayInfo--Fail set to redis,Error info "..err)
                            return
                         end
                      end
@@ -464,7 +464,7 @@
 
                         local ok,err = red:set(key,jsonvalue)
                         if not ok then
-                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fail set to redis , Error info "..err)
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun--VPauseDragEnd--Fail set to redis,Error info "..err)
                            return
                         end
                      end                     
@@ -475,7 +475,7 @@
 
                         local ok,err = red:set(key,jsonvalue)
                         if not ok then
-                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fail set to redis , Error info "..err)
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun--VStreamSwitch--Fail set to redis,Error info "..err)
                            return
                         end
                      end
@@ -486,7 +486,7 @@
 
                         local ok,err = red:set(key,jsonvalue)
                         if not ok then
-                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fail set to redis , Error info "..err)
+                           succ, err, forcible = log_dict:set(os.date("%x/%X"),"Fun--VideoPlayError--Fail set to redis,Error info "..err)
                            return
                         end
                      end
@@ -558,12 +558,12 @@
                              end
                  
                           else
-                             succ, err, forcible = log_dict:set(os.date("%x/%X"),args["key"].." data format is incorrect")
+                             succ, err, forcible = log_dict:set(os.date("%x/%X"),"Main--"..args["key"].." data format is incorrect")
                              return
                           end                        
                            
                      else
-                          succ, err, forcible = log_dict:set(os.date("%x/%X"),"the number of parameters be 4,but it is "..htgetn(args))
+                          succ, err, forcible = log_dict:set(os.date("%x/%X"),"Main--the number of parameters be 4,but it is "..htgetn(args))
                           return
                      end
 
