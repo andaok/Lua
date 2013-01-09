@@ -388,7 +388,7 @@
                         -- Obtain video meta information from redata , e.g Duration, avg bitrate every flow level.
                         -- tmp data for debug
                         flbit = {332,446,722,1782} 
-                        duration = 68                        
+                        duration = 1770                        
                         -- ######################
 
                         --#######################
