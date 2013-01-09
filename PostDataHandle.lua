@@ -178,7 +178,7 @@
 
                         -- Obtain the video traffic statistics flag from redata,"0" is flow inadequate,"1" is flow surplus.
                         -- Tmp data,For debug
-                        flowstatflag = {flow=0}
+                        flowstatflag = {flow=1}
                         ngx.req.set_header("Content-Type","application/json")
                         ngx.say(jsoncallback.."("..cjson.encode(flowstatflag)..")")
                         
