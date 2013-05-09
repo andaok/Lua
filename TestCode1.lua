@@ -1,3 +1,5 @@
+local cjson = require "cjson"
+
 
 function test(a,b,c)
    print(a)
@@ -18,3 +20,13 @@ b=90
 
 print(math.abs(a-b))
 print(math.abs(b-a)) 
+
+alltimepoint = {}
+for i=0,17,1 do
+    alltimepoint[i] = 0
+end
+
+
+print(cjson.encode(alltimepoint))
+
+
