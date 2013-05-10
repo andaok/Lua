@@ -24,9 +24,25 @@ print(math.abs(b-a))
 alltimepoint = {}
 for i=0,17,1 do
     alltimepoint[i] = 0
-end
+end 
 
 
 print(cjson.encode(alltimepoint))
+
+periodlist = {{12,34},{45,89},{78,45}}
+
+print(cjson.encode(periodlist))
+
+                        tmplist = {}
+                        for i,v in ipairs(periodlist) do
+                            if tonumber(v[1]) > tonumber(v[2]) then
+                               tmplist = {tonumber(v[1])-10,tonumber(v[2])}
+
+                               table.remove(periodlist,i)   
+                               table.insert(periodlist,tmplist)
+                            end
+                        end
+
+print(cjson.encode(periodlist))
 
 
