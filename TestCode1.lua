@@ -46,3 +46,9 @@ print(cjson.encode(periodlist))
 print(cjson.encode(periodlist))
 
 
+
+
+
+for i = 1,37,2 do
+    print(i)
+end
