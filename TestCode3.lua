@@ -43,3 +43,5 @@ print(SegmentFlagDict[5])
                         end
 
 print(cjson.encode(SegmentFlagDict))
+
+print(os.date())
