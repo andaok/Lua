@@ -100,17 +100,28 @@ print(cjson.encode(MergerPlaySeg(tlist)))
 
 
 -- ##############################
-tlist = {{0,2,7},{4,6,8},{10,12,8},{2,4,8}}
+tlist = {{0,2,7},{4,6,8},{12,14,9},{10,12,8},{8,10,9},{2,4,8}}
 
 function SortSegment(a,b)
    return a[1] < b[1]
 end
 
-table.sort(tlist,SortSegment)
+f1 = function(a,b) return a[1] < b[1] end
+
+table.sort(tlist,f1)
 
 print(cjson.encode(tlist))
 
 
+
+
+-- ###############################
+a = {}
+b = {{2,3,6},{7,8,9},{9,7,5}}
+a["periodata"] = b
+a["tmp"] = cjson.encode(b)
+
+print(cjson.encode(a))
 
 
 
