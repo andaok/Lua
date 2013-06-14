@@ -99,7 +99,16 @@ end
 print(cjson.encode(MergerPlaySeg(tlist)))
 
 
+-- ##############################
+tlist = {{0,2,7},{4,6,8},{10,12,8},{2,4,8}}
 
+function SortSegment(a,b)
+   return a[1] < b[1]
+end
+
+table.sort(tlist,SortSegment)
+
+print(cjson.encode(tlist))
 
 
 
