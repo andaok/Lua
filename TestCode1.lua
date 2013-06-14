@@ -52,3 +52,44 @@ print(cjson.encode(periodlist))
 for i = 0,37,2 do
     print(i)
 end
+
+-- #######################
+
+function htgetn(hashtable)
+   local n = 0
+   for _,v in pairs(hashtable) do
+        n = n + 1
+   end
+   return n
+end
+
+xiha = {}
+
+print("xiha len is:")
+print(htgetn(xiha))
+
+
+tmplist = {{0,2,2},{2,4,2},{4,6,3}}
+
+function MergerPlaySeg(oldlist)
+   newlist = {}
+   tmplist = {}
+   
+   for k1,k2,v in ipairs(oldlist) do
+       print("cx")       
+   end
+            
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
