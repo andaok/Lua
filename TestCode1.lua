@@ -63,23 +63,40 @@ function htgetn(hashtable)
    return n
 end
 
-xiha = {}
+tlist = {{0,2,2},{2,4,2},{4,6,3},{6,8,3},{8,10,6},{10,12,6}}
 
-print("xiha len is:")
-print(htgetn(xiha))
-
-
-tmplist = {{0,2,2},{2,4,2},{4,6,3}}
 
 function MergerPlaySeg(oldlist)
    newlist = {}
    tmplist = {}
    
-   for k1,k2,v in ipairs(oldlist) do
-       print("cx")       
+   for key,value in ipairs(oldlist) do
+       k1 = value[1]
+       k2 = value[2]
+       v = value[3]
+       if htgetn(tmplist) == 0 then
+          tmplist = {k1,k2,v}
+       else
+          if tmplist[2] ~= k1 then
+             table.insert(newlist,tmplist)
+             tmplist = {k1,k2,v}
+          else
+             if tmplist[3] ~= v then
+                table.insert(newlist,tmplist)
+                tmplist = {k1,k2,v}
+             else
+                tmplist[2] = k2
+             end
+          end
+       end       
    end
-            
+
+   table.insert(newlist,tmplist)
+
+   return newlist      
 end
+
+print(cjson.encode(MergerPlaySeg(tlist)))
 
 
 
