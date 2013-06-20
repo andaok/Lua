@@ -4,6 +4,8 @@ t={}
 t["name"]="jack"
 t["age"]=30
 
-for i,v in ipairs(t) do
-    print(i)
+b={"one","two","three"}
+
+for i,v in pairs(b) do
+    print(i,v)
 end
