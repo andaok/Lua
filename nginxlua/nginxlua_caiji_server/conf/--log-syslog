@@ -1,0 +1,20 @@
+Thu Jul 24 12:08:15 2014 - *** Starting uWSGI 2.0.6 (64bit) on [Thu Jul 24 12:08:15 2014] ***
+Thu Jul 24 12:08:15 2014 - compiled with version: 4.4.7 20120313 (Red Hat 4.4.7-4) on 24 July 2014 11:37:48
+Thu Jul 24 12:08:15 2014 - os: Linux-2.6.32-431.el6.x86_64 #1 SMP Sun Nov 10 22:19:54 EST 2013
+Thu Jul 24 12:08:15 2014 - nodename: cwapub016.cloudiya.com
+Thu Jul 24 12:08:15 2014 - machine: x86_64
+Thu Jul 24 12:08:15 2014 - clock source: unix
+Thu Jul 24 12:08:15 2014 - detected number of CPU cores: 1
+Thu Jul 24 12:08:15 2014 - current working directory: /opt/nginx/conf
+Thu Jul 24 12:08:15 2014 - writing pidfile to /opt/nginx/uwsgi.pid
+Thu Jul 24 12:08:15 2014 - detected binary path: /usr/bin/uwsgi
+Thu Jul 24 12:08:15 2014 - !!! no internal routing support, rebuild with pcre support !!!
+Thu Jul 24 12:08:15 2014 - uWSGI running as root, you can use --uid/--gid/--chroot options
+Thu Jul 24 12:08:15 2014 - *** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+Thu Jul 24 12:08:15 2014 - your processes number limit is 7834
+Thu Jul 24 12:08:15 2014 - your memory page size is 4096 bytes
+Thu Jul 24 12:08:15 2014 - detected max file descriptor number: 1024
+Thu Jul 24 12:08:15 2014 - lock engine: pthread robust mutexes
+Thu Jul 24 12:08:15 2014 - thunder lock: disabled (you can enable it with --thunder-lock)
+Thu Jul 24 12:08:15 2014 - probably another instance of uWSGI is running on the same address (127.0.0.1:10005).
+Thu Jul 24 12:08:15 2014 - bind(): Address already in use [core/socket.c line 759]

@@ -1,0 +1,170 @@
+2014/07/07 16:24:24 [emerg] 25222#0: open() "/var/log/nginx/logs/error.log" failed (2: No such file or directory)
+2014/07/07 16:24:43 [emerg] 25224#0: open() "/var/log/nginx/logs/error.log" failed (2: No such file or directory)
+2014/07/08 10:58:59 [emerg] 25594#0: invalid number of arguments in "location" directive in /opt/nginx/conf/nginx.conf:80
+2014/07/08 11:00:07 [emerg] 25596#0: invalid number of arguments in "location" directive in /opt/nginx/conf/nginx.conf:80
+2014/07/08 11:00:40 [emerg] 25598#0: unexpected "m" in /opt/nginx/conf/nginx.conf:122
+2014/07/08 11:01:14 [emerg] 25611#0: unexpected "m" in /opt/nginx/conf/nginx.conf:122
+2014/07/08 11:01:33 [emerg] 25613#0: unexpected "m" in /opt/nginx/conf/nginx.conf:122
+2014/07/08 11:02:24 [emerg] 25617#0: unexpected "m" in /opt/nginx/conf/nginx.conf:122
+2014/07/08 11:02:58 [emerg] 25619#0: unexpected "*" in /opt/nginx/conf/nginx.conf:123
+2014/07/08 11:03:20 [notice] 25621#0: signal process started
+2014/07/08 11:06:29 [notice] 25642#0: signal process started
+2014/07/08 11:09:19 [notice] 25648#0: signal process started
+2014/07/08 11:11:04 [notice] 25663#0: signal process started
+2014/07/08 11:15:25 [notice] 25675#0: signal process started
+2014/07/08 11:42:22 [notice] 25698#0: signal process started
+2014/07/08 18:02:09 [notice] 26076#0: signal process started
+2014/07/08 18:25:21 [notice] 26107#0: signal process started
+2014/07/08 18:25:22 [notice] 26110#0: signal process started
+2014/07/09 15:13:51 [notice] 27047#0: signal process started
+2014/07/09 15:22:10 [notice] 27144#0: signal process started
+2014/07/09 15:25:17 [notice] 27164#0: signal process started
+2014/07/09 15:26:40 [notice] 27172#0: signal process started
+2014/07/09 15:28:09 [notice] 27183#0: signal process started
+2014/07/09 15:28:19 [notice] 27189#0: signal process started
+2014/07/09 15:28:46 [notice] 27193#0: signal process started
+2014/07/09 15:30:27 [notice] 27205#0: signal process started
+2014/07/09 15:34:27 [notice] 27220#0: signal process started
+2014/07/09 15:34:43 [notice] 27225#0: signal process started
+2014/07/09 15:35:42 [notice] 27233#0: signal process started
+2014/07/09 15:37:51 [notice] 27257#0: signal process started
+2014/07/09 15:40:15 [notice] 27275#0: signal process started
+2014/07/09 15:42:30 [notice] 27288#0: signal process started
+2014/07/09 15:43:28 [notice] 27298#0: signal process started
+2014/07/09 15:44:56 [notice] 27307#0: signal process started
+2014/07/09 15:44:57 [notice] 27310#0: signal process started
+2014/07/09 16:56:43 [notice] 28309#0: signal process started
+2014/07/09 16:56:53 [notice] 28321#0: signal process started
+2014/07/09 16:56:53 [error] 28321#0: open() "/opt/nginx/nginx.pid" failed (2: No such file or directory)
+2014/07/09 17:40:15 [notice] 29313#0: signal process started
+2014/07/09 17:53:35 [notice] 29627#0: signal process started
+2014/07/09 17:53:35 [error] 29627#0: open() "/opt/nginx/nginx.pid" failed (2: No such file or directory)
+2014/07/09 17:53:41 [notice] 29628#0: signal process started
+2014/07/09 17:53:41 [error] 29628#0: open() "/opt/nginx/nginx.pid" failed (2: No such file or directory)
+2014/07/09 17:58:21 [notice] 29675#0: signal process started
+2014/07/09 17:58:22 [notice] 29678#0: signal process started
+2014/07/09 17:58:43 [notice] 29685#0: signal process started
+2014/07/09 18:04:31 [notice] 29706#0: signal process started
+2014/07/09 18:04:31 [error] 29706#0: open() "/opt/nginx/nginx.pid" failed (2: No such file or directory)
+2014/07/09 18:04:32 [notice] 29707#0: signal process started
+2014/07/09 18:04:32 [error] 29707#0: open() "/opt/nginx/nginx.pid" failed (2: No such file or directory)
+2014/07/09 18:06:31 [notice] 29780#0: signal process started
+2014/07/09 18:09:31 [notice] 29818#0: signal process started
+2014/07/09 18:09:32 [notice] 29821#0: signal process started
+2014/07/09 18:10:15 [notice] 29825#0: signal process started
+2014/07/09 18:10:55 [notice] 29890#0: signal process started
+2014/07/09 18:12:42 [notice] 29920#0: signal process started
+2014/07/09 18:12:43 [notice] 29923#0: signal process started
+2014/07/09 18:13:15 [notice] 29988#0: signal process started
+2014/07/09 18:19:39 [notice] 30077#0: signal process started
+2014/07/09 18:21:57 [notice] 30181#0: signal process started
+2014/07/09 18:24:12 [notice] 30285#0: signal process started
+2014/07/10 10:32:30 [notice] 30745#0: signal process started
+2014/07/10 11:06:03 [notice] 31522#0: signal process started
+2014/07/10 11:15:35 [notice] 31738#0: signal process started
+2014/07/10 14:42:46 [notice] 3541#0: signal process started
+2014/07/10 14:42:46 [error] 3541#0: open() "/opt/nginx/nginx.pid" failed (2: No such file or directory)
+2014/07/10 14:48:21 [notice] 3715#0: signal process started
+2014/07/10 14:48:54 [notice] 3799#0: signal process started
+2014/07/10 15:49:05 [notice] 3844#0: signal process started
+2014/07/10 15:49:05 [error] 3844#0: open() "/opt/nginx/nginx.pid" failed (2: No such file or directory)
+2014/07/10 15:51:34 [notice] 3952#0: signal process started
+2014/07/10 15:53:06 [notice] 4026#0: signal process started
+2014/07/10 16:01:13 [notice] 4133#0: signal process started
+2014/07/10 16:05:49 [notice] 4184#0: signal process started
+2014/07/10 16:08:50 [notice] 4275#0: signal process started
+2014/07/10 17:07:16 [notice] 4655#0: signal process started
+2014/07/10 17:20:54 [notice] 4896#0: signal process started
+2014/07/10 17:50:16 [notice] 5184#0: signal process started
+2014/07/11 11:43:16 [notice] 6034#0: signal process started
+2014/07/11 13:49:53 [notice] 6350#0: signal process started
+2014/07/11 15:22:00 [notice] 6569#0: signal process started
+2014/07/11 17:11:02 [notice] 7358#0: signal process started
+2014/07/11 17:11:03 [notice] 7361#0: signal process started
+2014/07/11 17:11:03 [notice] 7364#0: signal process started
+2014/07/11 17:11:03 [notice] 7367#0: signal process started
+2014/07/11 17:12:15 [notice] 7461#0: signal process started
+2014/07/11 17:16:43 [notice] 7590#0: signal process started
+2014/07/11 17:16:43 [notice] 7593#0: signal process started
+2014/07/11 17:16:44 [notice] 7596#0: signal process started
+2014/07/11 17:16:44 [notice] 7599#0: signal process started
+2014/07/11 17:19:50 [notice] 7750#0: signal process started
+2014/07/11 17:23:12 [notice] 7915#0: signal process started
+2014/07/14 11:24:52 [emerg] 9907#0: "access_log" directive is not allowed here in /opt/nginx/conf/nginx.conf:5
+2014/07/14 11:25:31 [emerg] 9910#0: "access_log" directive is not allowed here in /opt/nginx/conf/nginx.conf:4
+2014/07/14 11:26:27 [emerg] 9912#0: unknown log format "debug" in /opt/nginx/conf/nginx.conf:80
+2014/07/14 11:26:44 [emerg] 9914#0: unknown log format "warn" in /opt/nginx/conf/nginx.conf:80
+2014/07/14 11:27:03 [emerg] 9916#0: unknown log format "warning" in /opt/nginx/conf/nginx.conf:80
+2014/07/14 11:27:23 [emerg] 9918#0: unknown log format "info" in /opt/nginx/conf/nginx.conf:80
+2014/07/14 11:28:25 [notice] 9920#0: signal process started
+2014/07/14 11:28:25 [error] 9920#0: open() "/opt/nginx/nginx.pid" failed (2: No such file or directory)
+2014/07/14 11:28:36 [notice] 9921#0: signal process started
+2014/07/14 11:28:36 [error] 9921#0: open() "/opt/nginx/nginx.pid" failed (2: No such file or directory)
+2014/07/14 11:49:14 [notice] 10055#0: signal process started
+2014/07/14 11:49:15 [notice] 10058#0: signal process started
+2014/07/14 11:50:43 [notice] 10072#0: signal process started
+2014/07/14 12:23:33 [notice] 10132#0: signal process started
+2014/07/14 12:23:33 [notice] 10135#0: signal process started
+2014/07/14 12:23:34 [notice] 10138#0: signal process started
+2014/07/14 12:23:34 [notice] 10141#0: signal process started
+2014/07/14 12:23:34 [notice] 10144#0: signal process started
+2014/07/14 12:30:36 [notice] 10193#0: signal process started
+2014/07/14 12:30:37 [notice] 10196#0: signal process started
+2014/07/14 12:34:32 [notice] 10377#0: signal process started
+2014/07/14 12:35:38 [notice] 10441#0: signal process started
+2014/07/14 12:36:24 [notice] 10549#0: signal process started
+2014/07/14 14:29:52 [notice] 14596#0: signal process started
+2014/07/14 14:29:53 [notice] 14599#0: signal process started
+2014/07/14 14:29:53 [notice] 14602#0: signal process started
+2014/07/14 14:29:54 [notice] 14605#0: signal process started
+2014/07/14 14:29:54 [notice] 14608#0: signal process started
+2014/07/14 14:29:54 [notice] 14611#0: signal process started
+2014/07/14 14:29:55 [notice] 14614#0: signal process started
+2014/07/14 14:37:25 [notice] 14821#0: signal process started
+2014/07/14 16:47:59 [notice] 17400#0: signal process started
+2014/07/14 16:48:00 [notice] 17403#0: signal process started
+2014/07/14 16:48:00 [notice] 17406#0: signal process started
+2014/07/14 16:52:13 [notice] 17541#0: signal process started
+2014/07/24 12:01:35 [emerg] 3178#0: getpwnam("www") failed in /opt/nginx/conf/nginx.conf:1
+2014/07/24 12:02:22 [emerg] 3197#0: open() "/var/log/nginx/error.log" failed (2: No such file or directory)
+2014/07/24 12:23:56 [notice] 3391#0: signal process started
+2014/07/24 12:23:57 [notice] 3394#0: signal process started
+2014/07/24 13:09:43 [notice] 3431#0: signal process started
+2014/07/24 13:13:21 [notice] 3460#0: signal process started
+2014/07/24 13:16:05 [notice] 3471#0: signal process started
+2015/12/13 16:26:26 [notice] 22465#0: signal process started
+2015/12/13 18:53:07 [notice] 16131#0: signal process started
+2015/12/13 18:53:23 [notice] 16182#0: signal process started
+2015/12/13 18:59:42 [notice] 17218#0: signal process started
+2015/12/13 19:38:32 [notice] 27673#0: signal process started
+2015/12/13 19:53:21 [notice] 30045#0: signal process started
+2015/12/13 20:08:09 [notice] 32414#0: signal process started
+2015/12/13 20:19:41 [notice] 1812#0: signal process started
+2015/12/13 20:20:54 [notice] 2019#0: signal process started
+2015/12/13 20:22:02 [notice] 2201#0: signal process started
+2015/12/13 20:22:29 [notice] 2284#0: signal process started
+2015/12/13 20:23:40 [notice] 2480#0: signal process started
+2015/12/13 20:26:46 [notice] 2955#0: signal process started
+2015/12/13 20:27:10 [notice] 3045#0: signal process started
+2015/12/14 13:44:47 [notice] 7726#0: signal process started
+2015/12/14 13:45:22 [notice] 7915#0: signal process started
+2015/12/14 13:50:49 [notice] 9016#0: signal process started
+2015/12/14 13:50:51 [notice] 9019#0: signal process started
+2015/12/14 14:49:58 [notice] 21727#0: signal process started
+2015/12/15 10:23:17 [notice] 31608#0: signal process started
+2015/12/15 10:44:42 [notice] 6555#0: signal process started
+2015/12/17 17:49:44 [notice] 10736#0: signal process started
+2015/12/17 18:14:27 [notice] 17787#0: signal process started
+2015/12/17 18:14:29 [notice] 17811#0: signal process started
+2015/12/18 10:11:48 [notice] 27028#0: signal process started
+2015/12/18 13:29:06 [notice] 17433#0: signal process started
+2015/12/18 15:05:33 [notice] 3442#0: signal process started
+2015/12/18 15:05:41 [notice] 3487#0: signal process started
+2015/12/18 15:44:32 [notice] 13286#0: signal process started
+2016/01/13 15:06:17 [notice] 25081#0: signal process started
+2016/01/13 17:13:45 [notice] 4516#0: signal process started
+2016/01/13 19:06:26 [notice] 476#0: signal process started
+2016/01/14 18:39:26 [notice] 26725#0: signal process started
+2016/01/15 13:21:11 [notice] 8100#0: signal process started
+2016/01/19 14:52:06 [notice] 19184#0: signal process started
+2016/01/20 10:34:33 [notice] 20701#0: signal process started
