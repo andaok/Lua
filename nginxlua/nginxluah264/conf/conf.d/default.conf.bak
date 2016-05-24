@@ -1,0 +1,105 @@
+#
+# The default server
+#
+
+server {
+    listen       10.2.0.8:80;
+    server_name  10.2.0.8;
+    root /var/www/html;
+
+    charset utf-8;
+
+    access_log  /var/log/nginx/host.access.log  main;
+
+    error_page  404              /404.html;
+    location = /404.html {
+        root   /usr/share/nginx/html;
+    }
+
+    location /ad {
+
+content_by_lua '
+
+url = require "net.url"
+
+-- Calculate the number of elements for table
+function htgetn(hashtable)
+   local n = 0
+   for _,v in pairs(hashtable) do
+      n = n + 1
+   end
+   return n
+end
+                
+-- Split string by delimiter 
+function split(str,delimiter)
+  local sub_str_table = {}
+  while true do
+     local s , e = string.find(str,"%"..delimiter)
+     if s and e then
+        sub_str = string.sub(str,1,e-1)
+        table.insert(sub_str_table,sub_str)
+        str = string.sub(str,e+1,-1)
+     else
+        if htgetn(sub_str_table) > 0 then
+           table.insert(sub_str_table,str)
+           return sub_str_table
+        else
+           return nil
+        end
+
+        break
+
+     end
+  end
+end           
+
+-- Main                 
+uristr=ngx.var.uri
+urisegtab = split(string.sub(uristr,2,-1),"/")
+
+-- Obtain tid
+if urisegtab[2] == nil then
+   tid = ""
+else
+   tid = urisegtab[2] 
+end 
+
+-- Obtain http referer
+local h = ngx.req.get_headers()
+if h["referer"] == nil then
+   domainame = ""
+else
+   referer = h["referer"]
+   urltable = url.parse(referer) 
+   domainame = urltable.host
+end
+
+--ngx.say(tid,referer)
+ngx.redirect("http://v.68china.cn/player/current/ad/20140421adloader.swf?tid="..tid.."&dm="..domainame)
+--ngx.redirect("http://v.68china.cn/player/current/ad/adloader.swf?tid="..tid)
+
+
+--[[                     
+for i,v in ipairs(urisegtab) do
+    ngx.say("i is "..i..",v is "..v)
+end 
+                                        
+local h = ngx.req.get_headers()
+for k,v in pairs(h) do
+    ngx.say("key is "..k..",v is "..v)
+end
+
+if h["referer"] == nil then
+   --ngx.print(h["referer"]) 
+   ngx.print("no referer")
+else
+   ngx.print("have referer")   
+end 
+--]]                            
+                   
+';
+    }
+
+}
+
