@@ -1,0 +1,261 @@
+
+user              nginx;
+worker_processes  2;
+
+error_log  /var/log/nginx/error.log;
+
+pid        /var/run/nginx.pid;
+
+events {
+    use epoll;
+    worker_connections  65535;
+}
+
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile        on;
+
+    keepalive_timeout  10;
+
+    gzip  on;
+
+    lua_package_path "/opt/nginx/otherlibs/lib/?.lua;;";
+    lua_package_cpath "/opt/nginx/otherlibs/lib/?.so;;";
+    
+    #include /etc/nginx/conf.d/*.conf;
+
+    #---------------------
+    #FOR AD PLATFORM
+    #---------------------
+
+    upstream lebolb1.68china.cn {
+          server 10.2.0.8 max_fails=2 fail_timeout=5s;
+          server 10.2.0.10 max_fails=2 fail_timeout=5s;
+    }
+
+    server {
+          listen 80;
+          server_name t.68china.cn;
+          large_client_header_buffers 4 16k;
+          client_max_body_size 300m;
+          client_body_buffer_size 128k;
+          proxy_ignore_client_abort on;
+          proxy_connect_timeout 600;
+          proxy_read_timeout 600;
+          proxy_send_timeout 600;
+          proxy_buffer_size 64k;
+          proxy_buffers   4 32k;
+          proxy_busy_buffers_size 64k;
+          proxy_temp_file_write_size 64k;
+          location / {
+               proxy_next_upstream http_502 http_504 timeout;
+               proxy_pass http://lebolb1.68china.cn;
+               proxy_set_header Host       $host;
+               proxy_set_header X-Real-IP  $remote_addr;
+               proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+               expires 30d;
+          }
+    }
+
+    #--------------------
+    #FOR VIDEO LIVE AND VOD PLATFORM
+    #--------------------
+
+    server {
+          listen 81;
+          server_name zb.68china.cn;
+
+          location /crossdomain.xml {
+                   alias  /var/www/crossdomain.xml;
+          }
+          
+          location / {
+
+set $target '';
+
+access_by_lua '
+
+local redis = require "resty.redis"
+local cjson = require "cjson"
+
+-- Create a link to redis
+local red = redis:new()
+red:set_timeout(1000)
+local ok,err = red:connect("10.2.10.19",6379)
+if not ok then
+   ngx.log(ngx.ERR,"Fail connect to local redis:",err)
+   return ngx.exit(500)
+end
+ 
+-- Calculate the number of elements for table
+function htgetn(hashtable)
+   local n = 0
+   for _,v in pairs(hashtable) do
+      n = n + 1
+   end
+   return n
+end
+                
+-- Split string by delimiter 
+function split(str,delimiter)
+  local sub_str_table = {}
+  while true do
+     local s , e = string.find(str,"%"..delimiter)
+     if s and e then
+        sub_str = string.sub(str,1,e-1)
+        table.insert(sub_str_table,sub_str)
+        str = string.sub(str,e+1,-1)
+     else
+        if htgetn(sub_str_table) > 0 then
+           table.insert(sub_str_table,str)
+           return sub_str_table
+        else
+           return nil
+        end
+
+        break
+
+     end
+  end
+end           
+
+-- Main                 
+uristr=ngx.var.uri
+urisegtab = split(string.sub(uristr,2,-1),"/")
+uid=urisegtab[1]
+cid=urisegtab[2]
+
+--ngx.say(cid)
+
+-- Obtain the corresponding collection server address 
+local ipaddr,err = red:hget("cid_to_ipaddr",cid)
+
+--ngx.say(ipaddr)
+
+if not ipaddr then
+   ngx.log(ngx.ERR,"failed to get redis key:",err)
+   return ngx.exit(500)
+end
+
+if ipaddr == ngx.null then
+   ngx.log(ngx.ERR,"not ipaddr found for cid ",cid)
+   return ngx.exit(400)
+end
+
+ngx.var.target = ipaddr
+
+--ngx.say(ipaddr)
+	 
+';
+
+proxy_pass http://$target;
+         
+          } 
+    }
+
+
+##################################
+#LIVE AND VOD PLATFORM FOR PRODUCT ENVIRONMENT
+##################################
+
+server {
+          listen 80;
+          server_name live.68baobao.cn;
+          location /crossdomain.xml {
+                   alias  /var/www/crossdomain.xml;
+          }
+          location / {
+
+set $target '';
+
+access_by_lua '
+
+local redis = require "resty.redis"
+local cjson = require "cjson"
+
+-- Create a link to redis
+local red = redis:new()
+red:set_timeout(1000)
+local ok,err = red:connect("10.2.10.19",6379)
+if not ok then
+   ngx.log(ngx.ERR,"Fail connect to local redis:",err)
+   return ngx.exit(500)
+end
+
+-- Calculate the number of elements for table
+function htgetn(hashtable)
+   local n = 0
+   for _,v in pairs(hashtable) do
+      n = n + 1
+   end
+   return n
+end
+
+-- Split string by delimiter
+function split(str,delimiter)
+  local sub_str_table = {}
+  while true do
+     local s , e = string.find(str,"%"..delimiter)
+     if s and e then
+        sub_str = string.sub(str,1,e-1)
+        table.insert(sub_str_table,sub_str)
+        str = string.sub(str,e+1,-1)
+     else
+        if htgetn(sub_str_table) > 0 then
+           table.insert(sub_str_table,str)
+           return sub_str_table
+        else
+           return nil
+        end
+
+        break
+
+     end
+  end
+end
+
+-- Main
+uristr=ngx.var.uri
+urisegtab = split(string.sub(uristr,2,-1),"/")
+uid=urisegtab[1]
+cid=urisegtab[2]
+
+--ngx.say(cid)
+
+-- Obtain the corresponding collection server address
+local ipaddr,err = red:hget("cid_to_ipaddr",cid)
+
+--ngx.say(ipaddr)
+
+if not ipaddr then
+   ngx.log(ngx.ERR,"failed to get redis key:",err)
+   return ngx.exit(500)
+end
+
+if ipaddr == ngx.null then
+   ngx.log(ngx.ERR,"not ipaddr found for cid ",cid)
+   return ngx.exit(400)
+end
+
+ngx.var.target = ipaddr
+
+--ngx.say(ipaddr)
+
+';
+
+proxy_pass http://$target;
+
+          }
+    }
+
+}
+
