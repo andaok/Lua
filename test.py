@@ -7,4 +7,4 @@
 
 import os
 
-print "hello world andaok!"
+print "hello world andaok success!"
