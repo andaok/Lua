@@ -6,5 +6,7 @@
 # @Version : $Id$
 
 import os
+import sys
 
-print "hello world andaok success ??!?? new ??"
+print "hello world andaok success ??!?? new ?? go gome"
+print "wo hao e"
