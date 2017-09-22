@@ -9,4 +9,4 @@ import os
 import sys
 
 print "hello world andaok success ??!?? new ?? go gome"
-print "wo hao e"
+print "wo hao e jzxczxjcj"
