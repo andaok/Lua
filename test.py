@@ -5,8 +5,10 @@
 # @Link    : http://example.org
 # @Version : $Id$
 
-import os
+import os,sys
 import sys
 
-print "hello world andaok success ??!?? new ?? go gome"
-print "wo hao e jzxczxjcj"
+print "hello world andaok success kill ??!?? new ?? go gome"
+print "wo hao e jzxczxjcj xihahag"
+
+print "this is end "
